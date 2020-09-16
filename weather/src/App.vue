@@ -15,20 +15,24 @@
         </v-btn>
     </v-card-text>
         
+    <google-map />
+
+
   </v-app>
   
 </template>
 
 <script>
   import MyHeader from './components/Header'
-  
+  import GoogleMap from "./components/GoogleMap";
 
 
 export default ({
   name: 'App',
 
   components: {
-   MyHeader
+   MyHeader,
+   GoogleMap
   },
 
 })
