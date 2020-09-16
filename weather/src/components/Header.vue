@@ -1,16 +1,18 @@
 <template>
-        <v-app-bar
-            app
+        <nav>
+            <v-toolbar
+            class= " font-weight-bold "
             color="#0A275A"
             dark
             elevate-on-scroll
-        >
+            >
             <div class="d-flex align-center">
                 <h1>WEATHER REPORT</h1>
             </div>
+            </v-toolbar>
+        </nav>
 
-
-        </v-app-bar>
+        
 
 </template>
 
@@ -22,7 +24,8 @@ export default {
 </script>
 
 <style>
-    .v-app-bar{
+    .v-toolbar{
         font-family: 'Century Gothic';
+        font-size: 24px;
     }
 </style>
