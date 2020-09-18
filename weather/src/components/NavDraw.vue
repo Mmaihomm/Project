@@ -18,6 +18,7 @@
       </v-btn>
     </v-card>
     <v-card
+      absolute
       v-if="isHidden"
       class="flex-column justify-end align-self-end"
       dark
