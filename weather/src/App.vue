@@ -17,7 +17,7 @@ export default {
   components: {
    GoogleMap,
    MyHeader,
-   Drawer
+   Drawer,
   },
 
   data() {
