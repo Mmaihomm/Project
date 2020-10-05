@@ -27,7 +27,7 @@
         position: absolute;
         right: 0px;
         width: 400px; 
-        height: 950px;
+        height: 903px;
         position: absolute;
         background-image: linear-gradient(to bottom,rgba(77,133,233,0.95),rgba(255,255,255));
         "

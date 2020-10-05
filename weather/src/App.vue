@@ -3,6 +3,8 @@
     <MyHeader />
     <Drawer></Drawer>
     <google-map />
+    <MyFooter />
+    
   </v-app>
 </template>
 
@@ -10,6 +12,7 @@
 import GoogleMap from "./components/GoogleMap";
 import MyHeader from "./components/Header";
 import Drawer from "./components/NavDraw";
+import MyFooter from "./components/Footer";
 
 export default {
   name: "App",
@@ -18,6 +21,7 @@ export default {
    GoogleMap,
    MyHeader,
    Drawer,
+   MyFooter,
   },
 
   data() {
