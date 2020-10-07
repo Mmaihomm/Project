@@ -1,66 +1,84 @@
-<template>
-  <div style="position: fix; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px;">
-    <GmapMap
-        :center="{lat:13.736, lng:100.781}"
-        :zoom="12"
-        map-type-id="terrain"
-        style="width: 100%; height: 100%"
+<template 
+  absolute
+>
+  <v-card 
+    absolute
+    tile
+    color = "red"
+    height = 100%
+  >
+    
+    <v-btn 
+      icon
+      v-if="!isSearch"
+      background-color = "white"
+      style="top: 8px; left: 8 px;"
+      v-on:click="isSearch = true"
     >
-        <GmapMarker
-            :key="index"
-            v-for="(m, index) in markers"
-            :position="m.position"
-            :clickable="true"
-            :draggable="true"
-            @click="center=m.position"
-        />
-    </GmapMap>
-  </div>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+
+    <v-toolbar
+      class = "searching-tab"
+      background-color = "white"
+      absolute
+      rounded
+      dense
+      style="top: 8px; left: 8 px;"
+      v-if="isSearch"
+    >
+      <v-text-field
+        hide-details
+        floating
+        single-line
+        rounded
+        background-color = "yellow"
+      ></v-text-field>
+
+      <v-btn 
+        icon
+        v-on:click="locatorButtonPressed()"
+      >
+        <v-icon>mdi-crosshairs-gps</v-icon>
+      </v-btn>
+    </v-toolbar>
+  </v-card>
 </template>
 
 <script>
-export default {
-  name: "GoogleMap",
-  data() {
-    return {
-      // default to Montreal to keep it simple
-      // change this to whatever makes sense
-      center: { lat: 13.736, lng: 100.781 },
-      markers: [],
-      places: [],
-      currentPlace: null
-    };
-  },
+  export default {
+    name: "GoogleMap",
 
-  mounted() {
-    this.geolocate();
-  },
-
-  methods: {
-    // receives a place object via the autocomplete component
-    setPlace(place) {
-      this.currentPlace = place;
+    data() {
+      return {
+        isSearch: false,
+      };
     },
-    // addMarker() {
-    //   if (this.currentPlace) {
-    //     const marker = {
-    //       lat: this.currentPlace.geometry.location.lat(),
-    //       lng: this.currentPlace.geometry.location.lng()
-    //     };
-    //     this.markers.push({ position: marker });
-    //     this.places.push(this.currentPlace);
-    //     this.center = marker;
-    //     this.currentPlace = null;
-    //   }
-    // },
-    geolocate: function() {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
+
+
+    methods: {
+    locatorButtonPressed() {
+      if(navigator.geolocation) {
+        console.log("Hello You're in there");
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log(position.coords.latitude);
+            console.log(position.coords.longitude);
+          }, 
+          error => {
+            console.log(error.message); 
+          }
+        );
+      }
+      else {
+        console.log("Your browser does not support geolocation API");
+      }
     }
   }
-};
+  };
+
 </script>
+
+<style scoped>
+
+</style>
