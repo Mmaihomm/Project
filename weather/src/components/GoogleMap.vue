@@ -32,7 +32,11 @@
         floating
         single-line
         rounded
-        background-color = "yellow"
+        filled
+        dense
+        placeholder="Enter weather station"
+        v-model="address"
+        background-color = #00000
       ></v-text-field>
 
       <v-btn 
@@ -46,24 +50,31 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
     name: "GoogleMap",
 
     data() {
       return {
         isSearch: false,
+        address: ""
       };
     },
+
+    // mounted() {
+    //   new google.maps.places.Autocomplete(
+    //     document.getElementById("autocomplete")
+    //   )
+    // },
 
 
     methods: {
     locatorButtonPressed() {
       if(navigator.geolocation) {
-        console.log("Hello You're in there");
         navigator.geolocation.getCurrentPosition(
           position => {
-            console.log(position.coords.latitude);
-            console.log(position.coords.longitude);
+            this.getAddressFrom(position.coords.latitude,position.coords.longitude)
           }, 
           error => {
             console.log(error.message); 
@@ -73,8 +84,26 @@
       else {
         console.log("Your browser does not support geolocation API");
       }
+    },
+
+    getAddressFrom(lat, long) {
+      axios.get(
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
+        + lat + "," 
+        + long 
+        + "&key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8").then(response => {
+          if(response.data.error_message) {
+            console.log(response.data.error_message);
+          }
+          else {
+            this.address = response.data.results[0].formatted_address
+          }
+        })
+        .catch(error => {
+          console.log(error.message);
+        })
+      }
     }
-  }
   };
 
 </script>
