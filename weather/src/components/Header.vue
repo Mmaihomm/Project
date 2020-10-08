@@ -7,7 +7,7 @@
             elevate-on-scroll
             >
             <div class="d-flex align-center">
-                <h1>WEATHER REPORT</h1>
+                <h1>APRS WEATHER REPORT</h1>
             </div>
             </v-toolbar>
         </nav>
@@ -26,6 +26,6 @@ export default {
 <style>
     .v-toolbar{
         font-family: 'Century Gothic';
-        font-size: 24px;
+        font-size: 100%;
     }
 </style>
