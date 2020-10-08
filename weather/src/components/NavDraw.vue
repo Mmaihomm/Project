@@ -70,7 +70,7 @@
         flat
         width="95%"
         class="mx-auto justify-center"
-        style="margin: 5%;height: 350px; background-color: rgba(256,256,256,0.1);  font-size: 24px;"
+        style="margin: 5%;height: 350px; background-color: rgba(256,256,256,0.1);  font-size: 24px; color:white;"
       >
         <v-tabs
           show-arrows
@@ -106,20 +106,20 @@
                 <br />
                 <v-card-title
                   class="justify-center subtitle-2"
-                  style=" padding:0%; font-weight:300; "
+                  style=" padding:0%; font-weight:300; color:white;"
                 >
                   <span
-                    style="color: #F2C94C; text-shadow: 2px 2px rgba(0,0,0,0.5); font-size:30px;"
+                    style="color: #F2C94C; text-shadow: 2px 2px rgba(0,0,0,0.5); font-size:30px; "
                   >40 ํC</span>
                 </v-card-title>
-                <v-card-subtitle style="padding:20px;">Dew point 27 ํC</v-card-subtitle>
+                <v-card-subtitle style="padding:20px; color:white;">Dew point 27 ํC</v-card-subtitle>
               </v-card>
             </v-card>
             <v-card dark flat width="50%" class="mx-auto d-flex justify-center transparent">
               <v-card dark flat class="mx-auto flex-column justify-center transparent">
-                <v-card-subtitle style="margin:8px; padding:0px;">0.0 mm/h</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">0.0 mm/24h</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">0.0 mm/since 0:00</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">0.0 mm/h</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">0.0 mm/24h</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">0.0 mm/since 0:00</v-card-subtitle>
               </v-card>
             </v-card>
           </v-card>
@@ -132,9 +132,9 @@
           >
             <v-card dark flat width="50%" class="mx-auto d-flex align-center transparent">
               <v-card dark flat class="flex-column justify-start transparent">
-                <v-card-subtitle style="margin:8px; padding:0px;">Humidity</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">Pressure</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">Wind</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">Humidity</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">Pressure</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">Wind</v-card-subtitle>
               </v-card>
             </v-card>
             <v-divider
@@ -150,9 +150,9 @@
               class="mx-auto d-flex justify-start align-center transparent"
             >
               <v-card dark flat class="flex-column justify-center transparent">
-                <v-card-subtitle style="margin:8px; padding:0px;">PM 10</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">PM 2.5</v-card-subtitle>
-                <v-card-subtitle style="margin:8px; padding:0px;">PM 1.0</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">PM 10</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">PM 2.5</v-card-subtitle>
+                <v-card-subtitle style="margin:8px; padding:0px; color:white;">PM 1.0</v-card-subtitle>
               </v-card>
             </v-card>
           </v-card>
