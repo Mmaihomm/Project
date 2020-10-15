@@ -1,11 +1,22 @@
 <template>
-  <nav>
-    <v-footer absolute dark height="40%" color="#0A275A"  class="font-weight-medium">
-      <v-col class="text-center align-content-center" style="padding-top: 4px; font-size:80%" cols="12">
+  <v-card>
+    <v-footer
+      absolute
+      dark
+      height="40%"
+      color="#0A275A"
+      class="font-weight-medium"
+      style="z-index:9999"
+    >
+      <v-col
+        class="text-center align-content-center"
+        style="padding-top: 4px; font-size: 80%"
+        cols="12"
+      >
         Data Visualization Based on APRS Data Network
       </v-col>
     </v-footer>
-  </nav>
+  </v-card>
 </template>
 
 <script>
