@@ -8,10 +8,10 @@
   >
     <section style="position:relative;z-index:1;">
       <v-btn 
-        icon
+        rounded
+        fab
         elevation="10"
         v-if="!isSearch"
-        background-color = "white"
         style="top: 8px; left: 8px;"
         v-on:click="isSearch = true"
       >
@@ -19,15 +19,16 @@
       </v-btn>
 
       <v-toolbar
-        class = "searching-tab"
+        class = "searching-tab rounded-xl"
         background-color = "white"
         absolute
         fab
         rounded
         dense
-        style="top: 8px; left: 8 px;"
+        style="top: 8px; left: 8px;"
         v-if="isSearch"
       >
+      
         <v-autocomplete
           hide-details
           floating
@@ -46,7 +47,6 @@
 
         <v-btn 
           icon
-          
         >
           <v-icon>mdi-crosshairs-gps</v-icon>
         </v-btn>
