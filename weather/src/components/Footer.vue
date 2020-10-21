@@ -1,12 +1,12 @@
 <template>
   <v-card>
     <v-footer
-      absolute
+      fixed
       dark
       height="40%"
       color="#0A275A"
       class="font-weight-medium"
-      style="z-index:9999"
+      style="z-index:9999;"
     >
       <v-col
         class="text-center align-content-center"

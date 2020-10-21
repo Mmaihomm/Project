@@ -21,17 +21,18 @@
     <!------------------------------->
     <!---------- Side Bar ----------->
     <v-card
-      absolute
+      relative
       v-if="isHidden"
       class="flex-column justify-end align-self-end"
       dark
       style="
+        overflow-x: hidden;
         z-index: 10;
         position: absolute;
         right: 0px;
         width: 400px;
-        height: 85%;
-        background-image: linear-gradient(to bottom, rgba(77, 133, 233, 0.95),rgba(255, 255, 255));
+        height: 88%;
+        background-image: linear-gradient(to bottom, rgba(77, 133, 233),rgba(255, 255, 255,0.5));
       "
     >
       <v-row>
@@ -69,6 +70,46 @@
             TUE 18 AUG 2020  16:30
             </v-card>
             
+        </v-col>
+      </v-row>
+      <v-row class="justify-center" >
+        <v-col cols="11" >
+          <v-card
+          dark
+          flat
+          class="text-center"
+          style=" height:400px; background-color: rgba(256,256,256,0.2);"
+          >
+          <v-tabs show-arrows dark background-color="transparent">
+            <v-tab>All</v-tab>
+            <v-tab>Temperature</v-tab>
+            <v-tab>Pressure</v-tab>
+            <v-tab>Humidity</v-tab>
+            <v-tab>PM 1.0</v-tab>
+            <v-tab>PM 2.5</v-tab>
+            <v-tab>PM 10</v-tab>
+          </v-tabs>
+          
+          </v-card>
+          
+        </v-col>
+        <!-- Information -->
+      </v-row>
+      <v-row class="justify-center">
+        <!-- History -->
+        <v-col cols="11" >
+          <v-card
+          dark
+          flat
+          class="text-center"
+          style=" height:300px; background-color: rgba(256,256,256,0.1);"
+          >
+          <v-tabs dark background-color="transparent">
+            <v-tab>History</v-tab>
+          </v-tabs>
+          
+          </v-card>
+          
         </v-col>
       </v-row>
     </v-card>
