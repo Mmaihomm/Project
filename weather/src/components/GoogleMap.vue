@@ -4,15 +4,15 @@
   <v-card 
     absolute
     tile
-    color = "red"
     height = 100%
   >
     <section style="position:relative;z-index:1;">
       <v-btn 
         icon
+        elevation="10"
         v-if="!isSearch"
         background-color = "white"
-        style="top: 8px; left: 8 px;"
+        style="top: 8px; left: 8px;"
         v-on:click="isSearch = true"
       >
         <v-icon>mdi-magnify</v-icon>
@@ -22,34 +22,41 @@
         class = "searching-tab"
         background-color = "white"
         absolute
+        fab
         rounded
         dense
         style="top: 8px; left: 8 px;"
         v-if="isSearch"
       >
         <v-autocomplete
-          v-bind:id="autocomplete"
           hide-details
           floating
           single-line
           rounded
           filled
           dense
+          solo
           placeholder="Enter weather station"
-          v-model="address"
+          v-model="station.names"
+          :items = "station"
+          :filter="customFilter"
+          item-text="names"
           background-color = #00000
         ></v-autocomplete>
 
         <v-btn 
           icon
-          v-on:click="locatorButtonPressed()"
+          
         >
           <v-icon>mdi-crosshairs-gps</v-icon>
         </v-btn>
       </v-toolbar>
     </section>
 
-    <section id="map">
+    <section 
+      id="map"
+      v-on:click="isSearch = false"
+    >
 
     </section>
   </v-card>
@@ -66,14 +73,20 @@
     data() {
       return {
         isSearch: false,
-        address: ""
+        station: [
+          {names: 'HS2AR-10'},
+          {names: 'sdgf;s'},
+          {names: ';ldjkz'},
+          {names: 'awdhkj'},
+        ],
       };
     },
 
     mounted() {
-      new google.maps.places.Autocomplete(
-        document.getElementById("autocomplete")
-      )
+      // new google.maps.places.Autocomplete(
+      //   document.getElementById("autocomplete")
+      // )
+      this.locatorButtonPressed();
     },
 
 
@@ -112,7 +125,7 @@
               console.log(response.data.error_message);
             }
             else {
-              this.address = response.data.results[0].formatted_address
+              this.stations = response.data.results[0].formatted_address
             }
           })
           .catch(error => {
@@ -125,7 +138,12 @@
         let map = new google.maps.Map(document.getElementById("map"), {
           zoom: 12,
           center: new google.maps.LatLng(latitude, longitude),
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          disableDefaultUI: true,
+          zoomControl: true,
+          zoomControlOptions: {
+          position: google.maps.ControlPosition.LEFT_CENTER,
+          },
         });
 
         // Add Marker
@@ -142,6 +160,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: orange;
+    background: rgba(77,133,233,0.95);
   }
 </style>
