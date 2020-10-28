@@ -31,7 +31,7 @@
         position: absolute;
         right: 0px;
         width: 400px;
-        height: 88%;
+        height: 85%;
         background-image: linear-gradient(to bottom, rgba(77, 133, 233),rgba(255, 255, 255,0.5));
       "
     >
@@ -50,7 +50,7 @@
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-col>
-        <v-col cols="9">
+        <v-col cols="8">
             <v-card
             v-model="station" 
             dark 
@@ -78,17 +78,23 @@
           dark
           flat
           class="text-center"
-          style=" height:400px; background-color: rgba(256,256,256,0.2);"
+          style="overflow:auto; height:400px; background-color: rgba(256,256,256,0.2);"
           >
-          <v-tabs show-arrows dark background-color="transparent">
-            <v-tab>All</v-tab>
-            <v-tab>Temperature</v-tab>
-            <v-tab>Pressure</v-tab>
-            <v-tab>Humidity</v-tab>
-            <v-tab>PM 1.0</v-tab>
-            <v-tab>PM 2.5</v-tab>
-            <v-tab>PM 10</v-tab>
+          <v-tabs v-model="tab" show-arrows dark background-color="transparent">
+            <v-tab 
+            v-for="item in items"
+            :key="item">
+              {{item}}
+            </v-tab>
           </v-tabs>
+
+          <v-tabs-item v-model="tab">
+            <v-tab-item
+            v-for="item in items"
+            :key="item">
+
+            </v-tab-item>
+          </v-tabs-item>
           
           </v-card>
           
@@ -102,7 +108,7 @@
           dark
           flat
           class="text-center"
-          style=" height:300px; background-color: rgba(256,256,256,0.1);"
+          style="overflow:auto; height:300px; background-color: rgba(256,256,256,0.1);"
           >
           <v-tabs dark background-color="transparent">
             <v-tab>History</v-tab>
@@ -124,6 +130,8 @@ export default {
   data() {
     return {
       isHidden: false,
+      tab: null,
+      items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 1.0', 'PM 2.5', 'PM 10' ],
     };
   },
 };
