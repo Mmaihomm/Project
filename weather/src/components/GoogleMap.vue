@@ -136,7 +136,7 @@
       showStationOnTheMap(latitude, longitude) {
         // Create a map object
         let map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 12,
+          zoom: 8,
           center: new google.maps.LatLng(latitude, longitude),
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           disableDefaultUI: true,
@@ -146,6 +146,9 @@
           },
         });
 
+        const infoWindow = new google.maps.InfoWindow();
+        const contentString = '<div id="content">Hello world!</div>';
+
         // Add Marker
         for(let i=0; i < this.station.length; i++) {
           const lat = this.station[i].latitude;
@@ -153,9 +156,21 @@
 
           const marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
+            animation: google.maps.Animation.DROP,
             map: map
           })
+
+
+          google.maps.event.addListener(marker, "mouseover", function() {
+            infoWindow.setContent(contentString);
+            infoWindow.open(map, marker);
+          })
+
+          google.maps.event.addListener(marker, "click", function() {
+            console.log("click works");
+          })
         }
+
       }
     }
   };
