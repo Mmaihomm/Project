@@ -58,7 +58,7 @@
             class=" transparent text-center" 
             style="height: 50px;  font-size: 24px; font-family: 'Century Gothic';"
             >
-            EW 4214
+            {{ station }}
             </v-card>
             <v-card
             v-model="date"
@@ -67,7 +67,7 @@
             class="transparent text-center"
             style="height: 50px;  font-size: 16px; font-family: 'Century Gothic';"
             >
-            TUE 18 AUG 2020  16:30
+            {{getTimeStamp()}}
             </v-card>
             
         </v-col>
@@ -88,13 +88,49 @@
             </v-tab>
           </v-tabs>
 
-          <v-tabs-item v-model="tab">
-            <v-tab-item
-            v-for="item in items"
-            :key="item">
-
+          <v-tabs-items v-model="tab" class="transparent">
+            <!--All-->
+            <v-tab-item>
+              <v-card flat style="overflow-x:hidden; height:352px; background-color: rgba(256,256,256,0);">
+                <v-row>
+                  <v-col cols="6">
+                    <v-card flat style="overflow-x:hidden; height:330px; background-color: rgba(256,256,256,0);">
+                      
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">  
+                    <v-card flat style="overflow-x:hidden; height:330px; background-color: rgba(256,256,256,0);">
+                      
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-card>
             </v-tab-item>
-          </v-tabs-item>
+            <!--Temp-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">temperature</v-card>
+            </v-tab-item>
+            <!--Pressure-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">Pressure</v-card>
+            </v-tab-item>
+            <!--Humidity-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">humidity</v-card>
+            </v-tab-item>
+            <!--PM 10-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 10</v-card>
+            </v-tab-item>
+            <!--PM 2.5-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 2.5</v-card>
+            </v-tab-item>
+            <!--PM 1.0-->
+            <v-tab-item>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 1.0</v-card>
+            </v-tab-item>
+          </v-tabs-items>
           
           </v-card>
           
@@ -110,9 +146,17 @@
           class="text-center"
           style="overflow:auto; height:300px; background-color: rgba(256,256,256,0.1);"
           >
-          <v-tabs dark background-color="transparent">
+          <v-tabs v-model="history" dark background-color="transparent">
             <v-tab>History</v-tab>
           </v-tabs>
+
+          <v-tabs-items v-model="history" class="transparent">
+            <v-tab-item>
+              <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
+                
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
           
           </v-card>
           
@@ -124,18 +168,31 @@
 </template>
 
 <script>
+import moment from "moment"
 export default {
   name: "Drawer",
+
+  methods:{
+    getTimeStamp(){
+      return moment().format('ddd DD MMM YYYY LT')
+    }
+  },
+
+  props:[
+    'station',
+  ],
 
   data() {
     return {
       isHidden: false,
       tab: null,
-      items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 1.0', 'PM 2.5', 'PM 10' ],
+      items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
+      
     };
   },
 };
 </script>
 
 <style >
+  
 </style>

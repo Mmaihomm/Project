@@ -1,7 +1,7 @@
 <template>
   <v-app>  
     <MyHeader />
-    <Drawer></Drawer>
+    <Drawer v-bind:station="station"></Drawer>
     <google-map />
     <MyFooter />
     
@@ -27,7 +27,7 @@ export default {
 
   data() {
     return {
-      
+      station:'EW 214',
     };
   },
 };
