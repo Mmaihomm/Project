@@ -74,10 +74,10 @@
       return {
         isSearch: false,
         station: [
-          {names: 'HS2AR-10'},
-          {names: 'sdgf;s'},
-          {names: ';ldjkz'},
-          {names: 'awdhkj'},
+          {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218},
+          {names: 'E24YPM-1', latitude: 16.7646, longitude: 100.0568},
+          {names: 'HS6AB-10', latitude: 15.9948, longitude: 101.07},
+          {names: 'HS3LSE-11', latitude: 14.7201, longitude: 103.5686},
         ],
       };
     },
@@ -100,7 +100,7 @@
                 position.coords.longitude
               );
 
-              this.showUserLocationOnTheMap(
+              this.showStationOnTheMap(
                 position.coords.latitude,
                 position.coords.longitude
               );
@@ -133,7 +133,7 @@
           })
       },
       
-      showUserLocationOnTheMap(latitude, longitude) {
+      showStationOnTheMap(latitude, longitude) {
         // Create a map object
         let map = new google.maps.Map(document.getElementById("map"), {
           zoom: 12,
@@ -147,6 +147,15 @@
         });
 
         // Add Marker
+        for(let i=0; i < this.station.length; i++) {
+          const lat = this.station[i].latitude;
+          const lng = this.station[i].longitude;
+
+          const marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map
+          })
+        }
       }
     }
   };
