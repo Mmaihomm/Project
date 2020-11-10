@@ -11,9 +11,6 @@
             </div>
             </v-toolbar>
         </nav>
-
-        
-
 </template>
 
 <script>
