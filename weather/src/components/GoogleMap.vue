@@ -38,15 +38,18 @@
           dense
           solo
           placeholder="Enter weather station"
-          v-model="station.names"
+          v-model="selected"
           :items = "station"
-          :filter="customFilter"
+          hide-no-data
+          clearable
           item-text="names"
+          item-value="names"
+          return-object
           background-color = #00000
         ></v-autocomplete>
-
         <v-btn 
           icon
+          v-on:click= "showStationOnTheMap(selected.latitude,selected.longitude)"
         >
           <v-icon>mdi-crosshairs-gps</v-icon>
         </v-btn>
@@ -73,11 +76,20 @@
     data() {
       return {
         isSearch: false,
+        selected: null,
         station: [
           {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218},
           {names: 'E24YPM-1', latitude: 16.7646, longitude: 100.0568},
           {names: 'HS6AB-10', latitude: 15.9948, longitude: 101.07},
           {names: 'HS3LSE-11', latitude: 14.7201, longitude: 103.5686},
+          {names: 'HS2AR-11', latitude: 15.6454, longitude: 100.2218},
+          {names: 'E24YPM-2', latitude: 16.7646, longitude: 100.0568},
+          {names: 'HS6AB-11', latitude: 15.9948, longitude: 101.07},
+          {names: 'HS3LSE-12', latitude: 14.7201, longitude: 103.5686},
+          {names: 'HS2AR-13', latitude: 15.6454, longitude: 100.2218},
+          {names: 'E24YPM-5', latitude: 16.7646, longitude: 100.0568},
+          {names: 'HS6AB-17', latitude: 15.9948, longitude: 101.07},
+          {names: 'HS3LSE-14', latitude: 14.7201, longitude: 103.5686},
         ],
       };
     },
@@ -147,7 +159,7 @@
         });
 
         const infoWindow = new google.maps.InfoWindow();
-        const contentString = '<div id="content">Hello world!</div>';
+        const contentString = '<div id="contentna">Hello world!</div>';
 
         // Add Marker
         for(let i=0; i < this.station.length; i++) {
@@ -185,5 +197,9 @@
     bottom: 0;
     left: 0;
     background: rgba(77,133,233,0.95);
+  }
+
+  #contentna {
+    background: palevioletred;
   }
 </style>
