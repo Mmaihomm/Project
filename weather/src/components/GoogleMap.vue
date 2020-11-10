@@ -82,14 +82,14 @@
           {names: 'E24YPM-1', latitude: 16.7646, longitude: 100.0568},
           {names: 'HS6AB-10', latitude: 15.9948, longitude: 101.07},
           {names: 'HS3LSE-11', latitude: 14.7201, longitude: 103.5686},
-          {names: 'HS2AR-11', latitude: 15.6454, longitude: 100.2218},
-          {names: 'E24YPM-2', latitude: 16.7646, longitude: 100.0568},
-          {names: 'HS6AB-11', latitude: 15.9948, longitude: 101.07},
-          {names: 'HS3LSE-12', latitude: 14.7201, longitude: 103.5686},
-          {names: 'HS2AR-13', latitude: 15.6454, longitude: 100.2218},
-          {names: 'E24YPM-5', latitude: 16.7646, longitude: 100.0568},
-          {names: 'HS6AB-17', latitude: 15.9948, longitude: 101.07},
-          {names: 'HS3LSE-14', latitude: 14.7201, longitude: 103.5686},
+          {names: 'FW1926', latitude: 13.7177, longitude: 100.5955},
+          {names: 'FW6985', latitude: 13.7472, longitude: 100.6672},
+          {names: 'HS1IFU-13', latitude: 13.8347, longitude: 100.6602},
+          {names: 'E25ECY-1', latitude: 13.9333, longitude: 100.7225},
+          {names: 'HS7AP-10', latitude: 12.9002, longitude: 99.7822},
+          {names: 'HS2AR-10', latitude: 12.7177, longitude: 101.2919},
+          {names: 'E21TMW-3', latitude: 13.0211, longitude: 101.8375},
+          {names: 'HS8AC-10', latitude: 10.9138, longitude: 99.3086},
         ],
       };
     },
@@ -148,7 +148,9 @@
       showStationOnTheMap(latitude, longitude) {
         // Create a map object
         let map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 8,
+          zoom: 10,
+          minZoom: 6,
+          maxZoom: 13,
           center: new google.maps.LatLng(latitude, longitude),
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           disableDefaultUI: true,
@@ -159,7 +161,6 @@
         });
 
         const infoWindow = new google.maps.InfoWindow();
-        const contentString = '<div id="contentna">Hello world!</div>';
 
         // Add Marker
         for(let i=0; i < this.station.length; i++) {
@@ -173,8 +174,10 @@
           })
 
 
-          google.maps.event.addListener(marker, "mouseover", function() {
-            infoWindow.setContent(contentString);
+          google.maps.event.addListener(marker, "mouseover", () => {
+            infoWindow.setContent(
+              `<div class="header">${this.station[i].names}</div>`
+              );
             infoWindow.open(map, marker);
           })
 
@@ -197,9 +200,5 @@
     bottom: 0;
     left: 0;
     background: rgba(77,133,233,0.95);
-  }
-
-  #contentna {
-    background: palevioletred;
   }
 </style>
