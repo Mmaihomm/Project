@@ -1,6 +1,8 @@
 <template>
+ 
   <nav>
     <!--- open sidebar button --->
+  {{getWeatherStation()}}
     <v-card>
       <v-btn
         v-if="!isHidden"
@@ -67,7 +69,7 @@
             class="transparent text-center"
             style="height: 50px;  font-size: 16px; font-family: 'Century Gothic';"
             >
-            {{getTimeStamp()}}
+            {{getTimeStamp()}} 
             </v-card>
             
         </v-col>
@@ -94,13 +96,43 @@
               <v-card flat style="overflow-x:hidden; height:352px; background-color: rgba(256,256,256,0);">
                 <v-row>
                   <v-col cols="6">
-                    <v-card flat style="overflow-x:hidden; height:330px; background-color: rgba(256,256,256,0);">
-                      
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="temp" v-bind:color="'#FF0000'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        Temperature
+                      </v-card>
+                    </v-card>
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="press" v-bind:color="'#FE8F25'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        Pressure
+                      </v-card>
+                    </v-card>
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="pm10" v-bind:color="'#F664C0'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        PM 10
+                      </v-card>
                     </v-card>
                   </v-col>
                   <v-col cols="6">  
-                    <v-card flat style="overflow-x:hidden; height:330px; background-color: rgba(256,256,256,0);">
-                      
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="humid" v-bind:color="'#0000FF'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        Humidity
+                      </v-card>
+                    </v-card>
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="pm25" v-bind:color="'#9031EF'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        PM 2.5
+                      </v-card>
+                    </v-card>
+                    <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
+                      <radChart v-bind:serie="pm1" v-bind:color="'#F2E146'"/>
+                      <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
+                        PM 1.0
+                      </v-card>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -108,27 +140,82 @@
             </v-tab-item>
             <!--Temp-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">temperature</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; text-shadow: 3px 2px 1px #4A4A48;"> {{temp[0]}}  ํC</div>
+                    <div style="color:#FFFFFF;"> Dew point {{dewPoint}}  ํC</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'temperature'" v-bind:dataHigh="[23,24,26,28,30]" v-bind:dataLow="[15,16,18,20,17]"/>
+                </v-card>
+              </v-card>
             </v-tab-item>
             <!--Pressure-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">Pressure</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                  <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{press[0]}}  mbar</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'Pressure'" v-bind:dataHigh="[1009,1009,1010,1008,1007]" v-bind:dataLow="[1009,1009,1010,1008,1007]"/>
+                </v-card>
+              </v-card>
             </v-tab-item>
             <!--Humidity-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">humidity</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                  <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{humid[0]}} %</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'Humidity'" v-bind:dataHigh="[65,63,64,67,70]" v-bind:dataLow="[63,62,64,59,58]" />
+                </v-card>
+              </v-card>
             </v-tab-item>
             <!--PM 10-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 10</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                  <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{pm10[0]}}  ug/m3</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'PM 10'" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                </v-card>/>
+              </v-card>
             </v-tab-item>
             <!--PM 2.5-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 2.5</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                  <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; margin:10px;  text-shadow: 3px 2px 1px #4A4A48;"> {{pm25[0]}}  ug/m3</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'PM 2.5'" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                </v-card>
+              </v-card>
             </v-tab-item>
             <!--PM 1.0-->
             <v-tab-item>
-              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">PM 1.0</v-card>
+              <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
+                  <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
+                  <v-col >
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{pm1[0]}}  ug/m3</div>
+                  </v-col>
+                </v-card>
+                <v-card flat style="background-color: rgba(256,256,256,0);">
+                    <lineChart v-bind:ytext="'PM 1.0'" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                </v-card>
+              </v-card>
             </v-tab-item>
           </v-tabs-items>
           
@@ -153,7 +240,9 @@
           <v-tabs-items v-model="history" class="transparent">
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
-                
+                <v-col>
+                  <lineChart v-bind:ytext="'Temperature'" v-bind:dataHigh="[23,24,26,28,30]" v-bind:dataLow="[15,16,18,20,17]"/>
+                </v-col>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -169,12 +258,28 @@
 
 <script>
 import moment from "moment"
+import {apiService} from "../service"
+import radChart from "../components/radiusChart"
+import lineChart from "../components/lineChart"
+
 export default {
   name: "Drawer",
+  
+  mounted() {
+
+  },
+
+  components:{
+    radChart,
+    lineChart,
+  },
 
   methods:{
     getTimeStamp(){
       return moment().format('ddd DD MMM YYYY LT')
+    },
+    getWeatherStation(){
+      return apiService.reportStation('1')
     }
   },
 
@@ -187,7 +292,13 @@ export default {
       isHidden: false,
       tab: null,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
-      
+      temp: [27.5],
+      press:[10],
+      humid:[65],
+      pm10:[6],
+      pm25:[2],
+      pm1:[5],
+      dewPoint: 25,
     };
   },
 };
