@@ -97,21 +97,21 @@
                 <v-row>
                   <v-col cols="6">
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="temp" v-bind:color="'#FF0000'"/>
+                      <radChart v-bind:serie="temp" v-bind:color="'#FF0000'" v-bind:unitt=" Y"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        Temperature
+                        Temperature ( ํC )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
                       <radChart v-bind:serie="press" v-bind:color="'#FE8F25'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        Pressure
+                        Pressure ( mbar )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
                       <radChart v-bind:serie="pm10" v-bind:color="'#F664C0'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        PM 10
+                        PM 10 ( ug/m3 )
                       </v-card>
                     </v-card>
                   </v-col>
@@ -119,19 +119,19 @@
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
                       <radChart v-bind:serie="humid" v-bind:color="'#0000FF'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        Humidity
+                        Humidity (%)
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
                       <radChart v-bind:serie="pm25" v-bind:color="'#9031EF'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        PM 2.5
+                        PM 2.5 ( ug/m3 )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
                       <radChart v-bind:serie="pm1" v-bind:color="'#F2E146'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
-                        PM 1.0
+                        PM 1.0 ( ug/m3 )
                       </v-card>
                     </v-card>
                   </v-col>
@@ -187,8 +187,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'PM 10'" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
-                </v-card>/>
+                    <lineChart v-bind:ytext="'PM 2.5'" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                </v-card>
               </v-card>
             </v-tab-item>
             <!--PM 2.5-->
@@ -293,7 +293,7 @@ export default {
       tab: null,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
       temp: [27.5],
-      press:[10],
+      press:[1010],
       humid:[65],
       pm10:[6],
       pm25:[2],

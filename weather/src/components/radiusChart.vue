@@ -11,10 +11,10 @@ export default {
     components: {
         apexcharts,
     },
-    props:[
-       'serie', 
-       'color'
-    ],
+    props:{
+       serie:Array, 
+       color:Array,
+    },
     data() {
       return {
                 series: [3],
@@ -49,7 +49,10 @@ export default {
                                             },
                                         value: {
                                             offsetY: -2,
-                                            fontSize: '15px'
+                                            fontSize: '15px',
+                                            formatter: function (val) {
+                                                return val 
+                                                }
                                             }
                                     }
                                 }
