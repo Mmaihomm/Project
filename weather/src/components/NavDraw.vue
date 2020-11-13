@@ -9,14 +9,13 @@
         absolute
         dark
         fab
-        small
         buttom
         right
         color="#0A275A"
         style="top: 8px"
         v-on:click="isHidden = true"
       >
-        <v-icon>mdi-chevron-left</v-icon>
+        <v-icon>mdi-monitor-dashboard</v-icon>
       </v-btn>
     </v-card>
     <!------------------------------->
