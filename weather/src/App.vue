@@ -1,7 +1,7 @@
 <template>
   <v-app>  
     <MyHeader />
-    <Drawer v-bind:station="station"></Drawer>
+    <!--<Drawer v-bind:station="station"></Drawer>-->
     <google-map />
     <MyFooter />
     
@@ -11,7 +11,7 @@
 <script>
 import GoogleMap from "./components/GoogleMap";
 import MyHeader from "./components/Header";
-import Drawer from "./components/NavDraw";
+//import Drawer from "./components/NavDraw";
 import MyFooter from "./components/Footer";
 
 
@@ -21,7 +21,7 @@ export default {
   components: {
    GoogleMap,
    MyHeader,
-   Drawer,
+   //Drawer,
    MyFooter,
   },
 

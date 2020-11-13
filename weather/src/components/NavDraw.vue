@@ -2,7 +2,6 @@
  
   <nav>
     <!--- open sidebar button --->
-  {{getWeatherStation()}}
     <v-card>
       <v-btn
         v-if="!isHidden"
@@ -23,7 +22,7 @@
     <!------------------------------->
     <!---------- Side Bar ----------->
     <v-card
-      relative
+      absolute
       v-if="isHidden"
       class="flex-column justify-end align-self-end"
       dark
@@ -33,7 +32,7 @@
         position: absolute;
         right: 0px;
         width: 400px;
-        height: 85%;
+        height: 100%;
         background-image: linear-gradient(to bottom, rgba(77, 133, 233),rgba(255, 255, 255,0.5));
       "
     >

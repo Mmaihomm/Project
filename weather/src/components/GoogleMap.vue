@@ -6,6 +6,7 @@
     tile
     height = 100%
   >
+    <Drawer v-bind:station="selected.names"/>
     <section style="position:relative;z-index:1;">
       <v-btn 
         rounded
@@ -54,8 +55,9 @@
           <v-icon>mdi-crosshairs-gps</v-icon>
         </v-btn>
       </v-toolbar>
+      
     </section>
-
+    
     <section 
       id="map"
       v-on:click="isSearch = false"
@@ -69,14 +71,18 @@
 
 <script>
   import axios from 'axios'
+  import Drawer from "../components/NavDraw";
 
   export default {
     name: "GoogleMap",
 
+    components:{
+      Drawer,
+    },
     data() {
       return {
         isSearch: false,
-        selected: null,
+        selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [
           {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
           {names: 'E24YPM-1', latitude: 16.7646, longitude: 100.0568, id: 2},
@@ -191,7 +197,7 @@
 
           google.maps.event.addListener(marker, "mouseover", () => {
             infoWindow.setContent(
-              `<div id="stationName" style="font-weight:bold; font-size:16px">${this.station[i].names}</div><br>`+
+              `<div id="stationName" style="font-weight:bold; font-size:16px;">${this.station[i].names}</div><br>`+
               `<div style="position: left;"><div id="temp" style="font-size:14px">Temperature : ${this.weathers[i].temp}  ํC</div>`+
               `<div id="humid" style="font-size:14px">Humidity : ${this.weathers[i].humid} %</div>`+
               `<div id="press" style="font-size:14px">Pressure : ${this.weathers[i].press} mbar</div></div>`+
@@ -202,8 +208,8 @@
             infoWindow.open(map, marker);
           })
 
-          google.maps.event.addListener(marker, "click", function() {
-            console.log("click works");
+          google.maps.event.addListener(marker, "click", () => {
+            this.selected = this.station[i];
           })
         }
 
