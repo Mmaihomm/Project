@@ -13,11 +13,11 @@ export default {
     },
     props:{
        serie:Array, 
-       color:Array,
+       color:String,
     },
     data() {
       return {
-                series: [3],
+                series: 3,
                 chartOptions: {
                             chart: {
                             type: 'radialBar',

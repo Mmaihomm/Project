@@ -6,7 +6,7 @@
     tile
     height = 100%
   >
-    <Drawer v-bind:station="selected.names"/>
+    <Drawer v-bind:station="selected.names" v-bind:weathers="weather"/>
     <section style="position:relative;z-index:1;">
       <v-btn 
         rounded
@@ -97,19 +97,20 @@
           {names: 'E21TMW-3', latitude: 13.0211, longitude: 101.8375, id: 11},
           {names: 'HS8AC-10', latitude: 10.9138, longitude: 99.3086, id: 12},
         ],
+        weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
         weathers: [
           {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 2, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 3, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 4, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 5, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 6, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 7, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 8, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 9, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 10, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 11, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-          {name:'HS2AR-10', id: 12, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 2, temp: 31, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 3, temp: 32, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 4, temp: 33, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 5, temp: 34, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 6, temp: 35, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 7, temp: 36, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 8, temp: 37, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 9, temp: 38, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 10, temp: 39, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 11, temp: 40, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+          {name:'HS2AR-10', id: 12, temp: 41, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
         ],
 
       };
@@ -210,6 +211,7 @@
 
           google.maps.event.addListener(marker, "click", () => {
             this.selected = this.station[i];
+            this.weather = this.weathers[i];
           })
         }
 

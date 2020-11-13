@@ -96,19 +96,19 @@
                 <v-row>
                   <v-col cols="6">
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="temp" v-bind:color="'#FF0000'" v-bind:unitt=" Y"/>
+                      <radChart v-bind:serie="[weathers.temp]" v-bind:color="'#FF0000'" />
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Temperature ( ํC )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="press" v-bind:color="'#FE8F25'"/>
+                      <radChart v-bind:serie="[weathers.press]" v-bind:color="'#FE8F25'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Pressure ( mbar )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="pm10" v-bind:color="'#F664C0'"/>
+                      <radChart v-bind:serie="[weathers.pm10]" v-bind:color="'#F664C0'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 10 ( ug/m3 )
                       </v-card>
@@ -116,19 +116,19 @@
                   </v-col>
                   <v-col cols="6">  
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="humid" v-bind:color="'#0000FF'"/>
+                      <radChart v-bind:serie="[weathers.humid]" v-bind:color="'#0000FF'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Humidity (%)
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="pm25" v-bind:color="'#9031EF'"/>
+                      <radChart v-bind:serie="[weathers.pm25]" v-bind:color="'#9031EF'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 2.5 ( ug/m3 )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="pm1" v-bind:color="'#F2E146'"/>
+                      <radChart v-bind:serie="[weathers.pm1]" v-bind:color="'#F2E146'"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 1.0 ( ug/m3 )
                       </v-card>
@@ -142,7 +142,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                 <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; text-shadow: 3px 2px 1px #4A4A48;"> {{temp[0]}}  ํC</div>
+                    <div style="fontSize:35px; color:#F0B734; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.temp}}  ํC</div>
                     <div style="color:#FFFFFF;"> Dew point {{dewPoint}}  ํC</div>
                   </v-col>
                 </v-card>
@@ -156,7 +156,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{press[0]}}  mbar</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.press}}  mbar</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -169,7 +169,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{humid[0]}} %</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.humid}} %</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -182,7 +182,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{pm10[0]}}  ug/m3</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.pm10}}  ug/m3</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -195,7 +195,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px;  text-shadow: 3px 2px 1px #4A4A48;"> {{pm25[0]}}  ug/m3</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px;  text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.pm25}}  ug/m3</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -208,7 +208,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{pm1[0]}}  ug/m3</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.pm1}}  ug/m3</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -282,21 +282,18 @@ export default {
     }
   },
 
-  props:[
-    'station',
-  ],
+  props:{
+    station:String,
+    weathers:Object,
+  },
 
   data() {
     return {
       isHidden: false,
       tab: null,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
-      temp: [27.5],
-      press:[1010],
-      humid:[65],
-      pm10:[6],
-      pm25:[2],
-      pm1:[5],
+      //weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+      temp: [], press:[], humid:[], pm10:[], pm25:[], pm1:[],
       dewPoint: 25,
     };
   },
