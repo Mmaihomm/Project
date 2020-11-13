@@ -284,11 +284,12 @@ export default {
   props:{
     station:String,
     weathers:Object,
+    isHidden:Boolean,
   },
 
   data() {
     return {
-      isHidden: false,
+      //isHidden: false,
       tab: null,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
       //weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},

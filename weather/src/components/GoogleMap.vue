@@ -6,7 +6,7 @@
     tile
     height = 100%
   >
-    <Drawer v-bind:station="selected.names" v-bind:weathers="weather"/>
+    <Drawer v-bind:station="selected.names" v-bind:weathers="weather" v-bind:isHidden="isHidden"/>
     <section style="position:relative;z-index:1;">
       <v-btn 
         rounded
@@ -82,6 +82,7 @@
     data() {
       return {
         isSearch: false,
+        isHidden: false,
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [
           {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
@@ -212,6 +213,7 @@
           google.maps.event.addListener(marker, "click", () => {
             this.selected = this.station[i];
             this.weather = this.weathers[i];
+            this.isHidden = true;
           })
         }
 
