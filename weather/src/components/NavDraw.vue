@@ -58,7 +58,7 @@
             class=" transparent text-center" 
             style="height: 50px;  font-size: 24px; font-family: 'Century Gothic';"
             >
-            {{ station }}
+            {{ station }}  
             </v-card>
             <v-card
             v-model="date"
@@ -181,7 +181,7 @@
               <v-card flat style="height:352px; background-color: rgba(256,256,256,0);">
                   <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
-                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.pm10}}  ug/m3</div>
+                    <div style="fontSize:35px; color:#F0B734; margin:10px; text-shadow: 3px 2px 1px #4A4A48;"> {{weathers.pm10}} ug/m3</div>
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -260,11 +260,14 @@ import {apiService} from "../service"
 import radChart from "../components/radiusChart"
 import lineChart from "../components/lineChart"
 
+
 export default {
   name: "Drawer",
   
-  mounted() {
+  
 
+  mounted() {
+    
   },
 
   components:{
@@ -276,9 +279,27 @@ export default {
     getTimeStamp(){
       return moment().format('ddd DD MMM YYYY LT')
     },
-    getWeatherStation(){
-      return apiService.reportStation('1')
-    }
+    
+    async getWeatherStation(){
+      
+      let station = await apiService.stationList()
+      /*let list = [];
+        let i;
+        await apiService.stationList().then((results)=>{
+        for (i=0;i<results.length;i++) {
+        list = list.concat(results[i].name)
+        }
+        console.log(list)
+      }).catch((e)=>{
+      console.log(e)
+      })*/
+      console.log(station)
+      return station[0].name
+    },
+
+    getWeather(){
+      return apiService.reportStation()
+    },
   },
 
   props:{
@@ -290,11 +311,13 @@ export default {
   data() {
     return {
       //isHidden: false,
+      //weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+      stations: [],
       tab: null,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
-      //weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
       temp: [], press:[], humid:[], pm10:[], pm25:[], pm1:[],
       dewPoint: 25,
+      
     };
   },
 };
