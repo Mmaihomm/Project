@@ -3,6 +3,7 @@ import axios from "axios"
 export const apiService = {
   weatherData,
   stationList,
+  pmData,
 };
 axios.defaults.withCredentials = true
 
@@ -33,15 +34,20 @@ async function stationList() {
 
 
 
-function weatherData() {
-  axios.get('http://127.0.0.1:8000/weather/weatherdata/?page=1',{
+function weatherData(stationnid) {
+  axios.get('http://127.0.0.1:8000/weather/weatherdata/' + stationnid ,{
     headers:{
       'Accept': 'application/json', 
     },
   }).then((data)=>{
-        console.log(data)
+        console.log(data.data)
+        return data.data
   }).catch((e)=>{
         console.log(e)
   })
 
+}
+
+function pmData(stationname){
+  axios.get('' + stationname)
 }

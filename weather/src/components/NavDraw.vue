@@ -239,6 +239,7 @@
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
                 <v-col>
+                  {{ getWeather() }}
                   <lineChart v-bind:ytext="'Temperature'" v-bind:dataHigh="[23,24,26,28,30]" v-bind:dataLow="[15,16,18,20,17]"/>
                 </v-col>
               </v-card>
@@ -297,8 +298,8 @@ export default {
       return station[0].name
     },
 
-    getWeather(){
-      return apiService.reportStation()
+    getWeather(stationid){
+      return apiService.weatherData(stationid)
     },
   },
 
