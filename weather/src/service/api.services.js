@@ -34,14 +34,14 @@ async function stationList() {
 
 
 
-function weatherData(stationnid) {
-  axios.get('http://127.0.0.1:8000/weather/weatherdata/' + stationnid ,{
+function weatherData(stationnname) {
+  axios.get('http://127.0.0.1:8000/weather/weatherdata/?search=' + stationnname ,{
     headers:{
       'Accept': 'application/json', 
     },
   }).then((data)=>{
-        console.log(data.data)
-        return data.data
+        console.log(data.data.results[0])
+        return data.data.results[0]
   }).catch((e)=>{
         console.log(e)
   })
@@ -49,5 +49,15 @@ function weatherData(stationnid) {
 }
 
 function pmData(stationname){
-  axios.get('' + stationname)
+  axios.get('http://127.0.0.1:8000/weather/pmdata/?search=' + stationname,{
+    headers:{
+      'Accept': 'application/json', 
+    },
+  }).then((data)=>{
+        console.log(data.data.results[0])
+        return data.results
+  }).catch((e)=>{
+        console.log(e)
+  })
+
 }

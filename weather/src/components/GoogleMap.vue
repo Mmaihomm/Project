@@ -8,18 +8,19 @@
   >
     <Drawer v-bind:station="selected.names" v-bind:weathers="weather" v-bind:isHidden="isHidden"/>
     <section style="position:relative;z-index:1;">
+      <div  style="width: 20%; margin: 8px"
+      >
       <v-btn 
         rounded
         fab
         elevation="10"
         v-if="!isSearch"
-        style="top: 8px; left: 8px;"
         v-on:click="isSearch = true"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-toolbar
+      <!-- <v-toolbar
         class = "searching-tab rounded-xl"
         background-color = "white"
         absolute
@@ -27,15 +28,16 @@
         rounded
         dense
         style="top: 8px; left: 8px;"
-        v-if="isSearch"
-      >
+        
+      > -->
       
         <v-autocomplete
+          v-if="isSearch"
           hide-details
           floating
           single-line
           rounded
-          filled
+          
           dense
           solo
           placeholder="Enter weather station"
@@ -46,15 +48,12 @@
           item-text="names"
           item-value="names"
           return-object
-          background-color = #00000
+          
+          @change="showStationOnTheMap(selected.latitude,selected.longitude)"
         ></v-autocomplete>
-        <v-btn 
-          icon
-          v-on:click= "showStationOnTheMap(selected.latitude,selected.longitude)"
-        >
-          <v-icon>mdi-crosshairs-gps</v-icon>
-        </v-btn>
-      </v-toolbar>
+      </div>  
+          
+      <!-- </v-toolbar> -->
       
     </section>
     
@@ -71,6 +70,7 @@
 
 <script>
   import axios from 'axios'
+  import {apiService} from "../service"
   import Drawer from "../components/NavDraw";
 
   export default {
@@ -80,26 +80,14 @@
       Drawer,
     },
     data() {
+      
       return {
         isSearch: false,
         isHidden: false,
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
-        station: [
-          {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
-          {names: 'E24YPM-1', latitude: 16.7646, longitude: 100.0568, id: 2},
-          {names: 'HS6AB-10', latitude: 15.9948, longitude: 101.07, id: 3},
-          {names: 'HS3LSE-11', latitude: 14.7201, longitude: 103.5686, id: 4},
-          {names: 'FW1926', latitude: 13.7177, longitude: 100.5955, id: 5},
-          {names: 'FW6985', latitude: 13.7472, longitude: 100.6672, id: 6},
-          {names: 'HS1IFU-13', latitude: 13.8347, longitude: 100.6602, id: 7},
-          {names: 'E25ECY-1', latitude: 13.9333, longitude: 100.7225, id: 8},
-          {names: 'HS7AP-10', latitude: 12.9002, longitude: 99.7822, id: 9},
-          {names: 'HS2AR-10', latitude: 12.7177, longitude: 101.2919, id: 10},
-          {names: 'E21TMW-3', latitude: 13.0211, longitude: 101.8375, id: 11},
-          {names: 'HS8AC-10', latitude: 10.9138, longitude: 99.3086, id: 12},
-        ],
+        station: [],
         weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-        weathers: [
+        /*weathers: [
           {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 2, temp: 31, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 3, temp: 32, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
@@ -112,20 +100,47 @@
           {name:'HS2AR-10', id: 10, temp: 39, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 11, temp: 40, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 12, temp: 41, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-        ],
+        ],*/
+        all: [],
 
       };
     },
 
+    beforeCreate(){
+      
+    },
+    created(){
+    },
+
+    beforeMount(){
+      
+    },
+    
     mounted() {
       // new google.maps.places.Autocomplete(
       //   document.getElementById("autocomplete")
       // )
+      
+      
       this.locatorButtonPressed();
+
     },
 
 
     methods: {
+      async getWeatherStation(){
+      let station = await apiService.stationList()
+      return station
+    },
+      getWeather(stationName){
+        return  apiService.weatherData(stationName)
+        
+      },
+
+      getPM(stationName){
+        return apiService.pmData(stationName)
+      },
+      
       locatorButtonPressed() {
         if(navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -168,7 +183,7 @@
           })
       },
       
-      showStationOnTheMap(latitude, longitude) {
+      async showStationOnTheMap(latitude, longitude) {
         // Create a map object
         let map = new google.maps.Map(document.getElementById("map"), {
           zoom: 10,
@@ -185,10 +200,15 @@
 
         const infoWindow = new google.maps.InfoWindow();
 
+        this.all = await this.getWeatherStation();
+        this.station = this.all.map((element)=>{
+             
+          return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
+        });
         // Add Marker
-        for(let i=0; i < this.station.length; i++) {
-          const lat = this.station[i].latitude;
-          const lng = this.station[i].longitude;
+        for(let i=0; i < this.all.length; i++) {
+          const lat = this.all[i].lat;
+          const lng = this.all[i].lng;
 
           const marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -196,11 +216,12 @@
             map: map
           })
 
-
+          
+          
           google.maps.event.addListener(marker, "mouseover", () => {
             infoWindow.setContent(
               `<div id="stationName" style="font-weight:bold; font-size:16px;">${this.station[i].names}</div><br>`+
-              `<div style="position: left;"><div id="temp" style="font-size:14px">Temperature : ${this.weathers[i].temp}  ํC</div>`+
+              `<div style="position: left;"><div id="temp" style="font-size:14px">Temperature : ${this.weather.temp}  ํC</div>`+
               `<div id="humid" style="font-size:14px">Humidity : ${this.weathers[i].humid} %</div>`+
               `<div id="press" style="font-size:14px">Pressure : ${this.weathers[i].press} mbar</div></div>`+
               `<div style="position: left;"><div id="pm1" style="font-size:14px">PM 1.0 ${this.weathers[i].pm1} ug/m3</div>`+
@@ -211,7 +232,7 @@
           })
 
           google.maps.event.addListener(marker, "click", () => {
-            this.selected = this.station[i];
+            this.selected = this.all[i];
             this.weather = this.weathers[i];
             this.isHidden = true;
           })

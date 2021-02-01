@@ -268,7 +268,9 @@ export default {
   
 
   mounted() {
-    
+    //this.getWeatherStation()
+    //this.getWeather(1)
+    //this.getPM('HS9AN-10')
   },
 
   components:{
@@ -295,12 +297,16 @@ export default {
       console.log(e)
       })*/
       console.log(station)
-      return station[0].name
+      return station
     },
 
     getWeather(stationid){
       return apiService.weatherData(stationid)
     },
+
+    getPM(stationName){
+      return apiService.pmData(stationName)
+    }
   },
 
   props:{
