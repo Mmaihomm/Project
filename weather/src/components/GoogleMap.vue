@@ -52,7 +52,25 @@
           @change="showStationOnTheMap(selected.latitude,selected.longitude)"
         ></v-autocomplete>
       </div>  
-          
+
+      <div
+        id="toggleMap"
+      >
+        <v-btn
+          id="geo-btn"
+          v-on:click="isHeatmap=false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+        >
+          Geolocation
+        </v-btn>
+
+        <v-btn
+          id="heatmap-btn"
+          v-on:click="isHeatmap=true; showStationOnTheMap(selected.latitude,selected.longitude)"
+        >
+          Heatmap
+        </v-btn>
+      </div>
+
       <!-- </v-toolbar> -->
       
     </section>
@@ -73,6 +91,7 @@
   import {apiService} from "../service"
   import Drawer from "../components/NavDraw";
 
+  let map, heatmap;
   export default {
     name: "GoogleMap",
 
@@ -84,6 +103,8 @@
       return {
         isSearch: false,
         isHidden: false,
+        isHeatmap: false,
+        userLocat: {latitude: null, longitude: null},
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [],
         weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
@@ -117,13 +138,7 @@
     },
     
     mounted() {
-      // new google.maps.places.Autocomplete(
-      //   document.getElementById("autocomplete")
-      // )
-      
-      
-      this.locatorButtonPressed();
-
+      this.showUserLocationOnTheMap();
     },
 
 
@@ -141,7 +156,8 @@
         return apiService.pmData(stationName)
       },
       
-      locatorButtonPressed() {
+      // Get current position and set center
+      showUserLocationOnTheMap() {
         if(navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
@@ -165,7 +181,10 @@
         }
       },
 
+      // Get user location
       getAddressFrom(lat, long) {
+        this.userLocat.latitude = lat
+        this.userLocat.longitude = long
         axios.get(
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
           + lat + "," 
@@ -185,7 +204,7 @@
       
       async showStationOnTheMap(latitude, longitude) {
         // Create a map object
-        let map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(document.getElementById("map"), {
           zoom: 10,
           minZoom: 6,
           maxZoom: 13,
@@ -198,13 +217,20 @@
           },
         });
 
-        const infoWindow = new google.maps.InfoWindow();
 
         this.all = await this.getWeatherStation();
         this.station = this.all.map((element)=>{
-             
+          
           return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
         });
+
+        if(this.isHeatmap ? this.showMarker : this.showHeatmap);
+
+      },
+
+      showMarker() {
+        console.log("Marker Mode!")
+        const infoWindow = new google.maps.InfoWindow();
         // Add Marker
         for(let i=0; i < this.all.length; i++) {
           const lat = this.all[i].lat;
@@ -237,8 +263,23 @@
             this.isHidden = true;
           })
         }
+      },
 
-      }
+      showHeatmap() {
+        console.log("Heatmap Mode!")
+        // Set heatmap
+        this.point.push(this.point.push(new google.maps.LatLng(37.782, -122.447)))
+        console.log(this.point)
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: this.point,
+          map: map
+        });
+      },
+
+
+
+
+    // End methods
     }
   };
 
@@ -252,6 +293,27 @@
     bottom: 0;
     left: 0;
     background: rgba(77,133,233,0.95);
+  }
+
+  #toggleMap {
+    position: absolute;
+    top: 8px;
+    left: 45%;
+    border-radius: 20px;
+  }
+
+  #geo-btn{
+    width: 50%;
+    border-radius: 20px 0px 0px 20px;
+    background: rgba(0, 50, 138, 0.8);
+    color: white;
+    opacity: 0.9;
+  }
+
+  #heatmap-btn{
+    width: 50%;
+    border-radius: 0px 20px 20px 0px;
+    opacity: 0.9;
   }
 
   #stationName {
