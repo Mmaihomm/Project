@@ -65,7 +65,7 @@
 
         <v-btn
           id="heatmap-btn"
-          v-on:click="isHeatmap=true; showStationOnTheMap(selected.latitude,selected.longitude)"
+          v-on:click="isHeatmap=true; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
           Heatmap
         </v-btn>
@@ -84,7 +84,8 @@
   </v-card>
 </template>
 
-<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8&libraries=places,visualization" async=""></script>
 
 <script>
   import axios from 'axios'
@@ -92,7 +93,8 @@
   import Drawer from "../components/NavDraw";
 
   let map, heatmap;
-  export default {
+  
+  export default { 
     name: "GoogleMap",
 
     components:{
@@ -108,7 +110,7 @@
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [],
         weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-        /*weathers: [
+        weathers: [
           {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 2, temp: 31, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 3, temp: 32, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
@@ -121,8 +123,9 @@
           {name:'HS2AR-10', id: 10, temp: 39, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 11, temp: 40, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
           {name:'HS2AR-10', id: 12, temp: 41, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
-        ],*/
+        ],
         all: [],
+        point: [],
 
       };
     },
@@ -138,6 +141,7 @@
     },
     
     mounted() {
+      this.getDataWeather();
       this.showUserLocationOnTheMap();
     },
 
@@ -154,6 +158,16 @@
 
       getPM(stationName){
         return apiService.pmData(stationName)
+      },
+
+      async getDataWeather() {
+        this.all = await this.getWeatherStation();
+        this.station = this.all.map((element)=>{
+          
+          return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
+        });
+        
+        console.log("after call data from Django")
       },
       
       // Get current position and set center
@@ -202,7 +216,7 @@
           })
       },
       
-      async showStationOnTheMap(latitude, longitude) {
+      showStationOnTheMap(latitude, longitude) {
         // Create a map object
         map = new google.maps.Map(document.getElementById("map"), {
           zoom: 10,
@@ -217,14 +231,9 @@
           },
         });
 
+        console.log(this.isHeatmap)
 
-        this.all = await this.getWeatherStation();
-        this.station = this.all.map((element)=>{
-          
-          return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
-        });
-
-        if(this.isHeatmap ? this.showMarker : this.showHeatmap);
+        this.isHeatmap ? this.showHeatmap() : this.showMarker()
 
       },
 
@@ -268,12 +277,35 @@
       showHeatmap() {
         console.log("Heatmap Mode!")
         // Set heatmap
-        this.point.push(this.point.push(new google.maps.LatLng(37.782, -122.447)))
-        console.log(this.point)
+        // this.point.push(this.point.push(new google.maps.LatLng(37.782, -122.447)))
+        // console.log(this.point)
         heatmap = new google.maps.visualization.HeatmapLayer({
-          data: this.point,
+          data: this.getPoints(),
           map: map
         });
+        heatmap.set("radius", 20);
+      },
+
+      getPoints() {
+        console.log("Getting data point for heatmap")
+        var heatMapData = [
+          {location: new google.maps.LatLng(15.6454, 100.2218), weight: 0.5},
+          new google.maps.LatLng(13.5780, 100.3920),
+          {location: new google.maps.LatLng(13.5320, 100.3270), weight: 2},
+          {location: new google.maps.LatLng(13.5269, 100.3004), weight: 3},
+          {location: new google.maps.LatLng(13.4304, 100.3544), weight: 2},
+          new google.maps.LatLng(13.4753, 100.1775),
+          {location: new google.maps.LatLng(13.4753, 100.1775), weight: 0.5},
+
+          {location: new google.maps.LatLng(13.4206, 101.0326), weight: 3},
+          {location: new google.maps.LatLng(13.5780, 100.3920), weight: 2},
+          new google.maps.LatLng(13.4764, 100.0689),
+          {location: new google.maps.LatLng(13.2995, 100.1210), weight: 0.5},
+          new google.maps.LatLng(14.0248, 99.3047),
+          {location: new google.maps.LatLng(14.1669, 99.1363), weight: 2},
+          {location: new google.maps.LatLng(15.2054, 100.0359), weight: 3}
+        ];
+        return heatMapData
       },
 
 
