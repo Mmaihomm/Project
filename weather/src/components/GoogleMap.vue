@@ -126,6 +126,15 @@
         ],
         all: [],
         point: [],
+        test: [
+          {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218},
+          {names: 'HS2AR-10', latitude: 13.6454, longitude: 105.2218},
+          {names: 'HS2AR-10', latitude: 11.6454, longitude: 102.2218},
+          {names: 'HS2AR-10', latitude: 10.6454, longitude: 103.2218},
+          {names: 'HS2AR-10', latitude: 11.6454, longitude: 107.2218},
+          {names: 'HS2AR-10', latitude: 15.6454, longitude: 105.2218},
+          {names: 'HS2AR-10', latitude: 14.6454, longitude: 104.2218},
+        ],
 
       };
     },
@@ -141,19 +150,20 @@
     },
     
     mounted() {
-      this.getDataWeather();
       this.showUserLocationOnTheMap();
+      // this.geocodeLatlng();
+      this.getDataWeather();
     },
 
 
     methods: {
       async getWeatherStation(){
-      let station = await apiService.stationList()
-      return station
-    },
+        let station = await apiService.stationList()
+        return station
+      },
+
       getWeather(stationName){
         return  apiService.weatherData(stationName)
-        
       },
 
       getPM(stationName){
@@ -162,12 +172,55 @@
 
       async getDataWeather() {
         this.all = await this.getWeatherStation();
+
+        // Add province to each station 
+        for(let i = 0; i < this.all.length; i++) {          
+          this.geocodeLatlng(this.all[i].latitude, this.all[i].longitude, i);
+        }
+
         this.station = this.all.map((element)=>{
-          
           return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
         });
-        
-        console.log("after call data from Django")
+      },
+
+      geocodeLatlng(latitude, longitude, id) {  // Get lat long from station and return city
+        // Get address from geocoder
+        const geocoder = new google.maps.Geocoder();
+        const latlng = {
+          lat: latitude, //13.7289596, 
+          lng: longitude, //100.2218, 
+        };
+
+        // geocoder.geocode({locat}, (results, status) => {});
+        geocoder.geocode(
+          { location: latlng },
+          (
+            results,
+            status
+          ) => {
+            if (status === "OK") {
+              if (results[0]) {
+                // Search for province
+                for(let i = 0; i < 10; i++) {
+                  if(results[0].address_components[i].types[0] == "administrative_area_level_1") {
+                    var rs = results[0].address_components[i].long_name;
+                    // console.log(results[0].address_components[i].long_name)
+                    break;
+                  }
+                }
+                // console.log(rs);
+                this.all[id].locat = rs
+                console.log(this.all[id])
+
+              } else {
+                window.alert("No results found");
+
+              }
+            } else {
+              window.alert("Geocoder failed due to: " + status);
+            }
+          }
+        );
       },
       
       // Get current position and set center
@@ -199,6 +252,7 @@
       getAddressFrom(lat, long) {
         this.userLocat.latitude = lat
         this.userLocat.longitude = long
+        // console.log(this.userLocat.latitude,this.userLocat.longitude)
         axios.get(
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
           + lat + "," 
@@ -276,6 +330,22 @@
 
       showHeatmap() {
         console.log("Heatmap Mode!")
+        const gradient = [
+          "rgba(0, 255, 255, 0)",
+          "rgba(0, 255, 255, 1)",
+          "rgba(0, 191, 255, 1)",
+          "rgba(0, 127, 255, 1)",
+          "rgba(0, 63, 255, 1)",
+          "rgba(0, 0, 255, 1)",
+          "rgba(0, 0, 223, 1)",
+          "rgba(0, 0, 191, 1)",
+          "rgba(0, 0, 159, 1)",
+          "rgba(0, 0, 127, 1)",
+          "rgba(63, 0, 91, 1)",
+          "rgba(127, 0, 63, 1)",
+          "rgba(191, 0, 31, 1)",
+          "rgba(255, 0, 0, 1)",
+        ];
         // Set heatmap
         // this.point.push(this.point.push(new google.maps.LatLng(37.782, -122.447)))
         // console.log(this.point)
@@ -283,7 +353,8 @@
           data: this.getPoints(),
           map: map
         });
-        heatmap.set("radius", 20);
+        heatmap.set("radius", 50);
+        heatmap.set("gradient", gradient)
       },
 
       getPoints() {
