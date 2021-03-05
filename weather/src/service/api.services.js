@@ -5,7 +5,7 @@ export const apiService = {
   stationList,
   pmData,
 };
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 
 //name type time lasttime lat long
 async function stationList() {
@@ -34,17 +34,13 @@ async function stationList() {
 
 
 
-function weatherData(stationnname) {
-  axios.get('http://127.0.0.1:8000/weather/weatherdata/?search=' + stationnname ,{
+async function weatherData(stationnname) {
+  var result = await  axios.get('http://127.0.0.1:8000/weather/weatherdata/?search=' + stationnname ,{
     headers:{
       'Accept': 'application/json', 
     },
-  }).then((data)=>{
-        console.log(data.data.results[0])
-        return data.data.results[0]
-  }).catch((e)=>{
-        console.log(e)
   })
+  return result.data.results[0];
 
 }
 

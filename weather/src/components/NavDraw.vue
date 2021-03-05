@@ -5,7 +5,6 @@
     <v-card>
       <v-btn
         v-if="!isHidden"
-        v-model="but"
         absolute
         dark
         fab
