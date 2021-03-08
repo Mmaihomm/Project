@@ -71,6 +71,58 @@
         </v-btn>
       </div>
 
+      <v-col
+        cols="12"
+        class="py-2"
+        align="center"
+        v-if="isHeatmap"
+        
+      >
+        <v-btn-toggle
+          v-model="wx_type"
+          mandatory
+          color="deep-purple accent-3"
+          group
+        >
+          <v-btn 
+            value= 0
+            v-on:click="wx_type = 0; deleteHeatmap(); showHeatmap()">
+            Temperature
+          </v-btn>
+
+          <v-btn 
+            value= 1
+            v-on:click="wx_type = 1; deleteHeatmap(); showHeatmap()">
+            Humidity
+          </v-btn>
+
+          <v-btn 
+            value= 2
+            v-on:click="wx_type = 2; deleteHeatmap(); showHeatmap()">
+            Pressure
+          </v-btn>
+
+          <v-btn 
+            value= 3
+            v-on:click="wx_type = 3; deleteHeatmap(); showHeatmap()">
+            PM 1.0
+          </v-btn>
+
+          <v-btn 
+            value= 4
+            v-on:click="wx_type = 4; deleteHeatmap(); showHeatmap()">
+            PM 2.5
+          </v-btn>
+
+          <v-btn 
+            value= 5
+            v-on:click="wx_type = 5; deleteHeatmap(); showHeatmap()">
+            PM 10
+          </v-btn>
+
+        </v-btn-toggle>
+      </v-col>
+
       <!-- </v-toolbar> -->
       
     </section>
@@ -113,15 +165,7 @@
         weathers: [],
         allStation: [],
         point: [],
-        test: [
-          {names: 'HS2AR-10', lat: 15.6454, lng: 100.2218},
-          {names: 'HS2AR-10', lat: 13.6454, lng: 105.2218},
-          {names: 'HS2AR-10', lat: 11.6454, lng: 102.2218},
-          {names: 'HS2AR-10', lat: 10.6454, lng: 103.2218},
-          {names: 'HS2AR-10', lat: 11.6454, lng: 107.2218},
-          {names: 'HS2AR-10', lat: 15.6454, lng: 105.2218},
-          {names: 'HS2AR-10', lat: 14.6454, lng: 104.2218},
-        ],
+        wx_type: 0,
 
       };
     },
@@ -327,6 +371,7 @@
                     `<div id="pm25" style="font-size:14px">PM 2.5 ${(weathers[index].pm2_5 != undefined)?weathers[index].pm2_5:'N/A'} ug/m3</div>`+
                     `<div id="pm10" style="font-size:14px">PM 10 ${(weathers[index].pm10 != undefined)?weathers[index].pm10:'N/A'} ug/m3</div></div>`
                     );
+                  // infoWindow.setBackgroundColor("rgb(153, 255, 73)");
                   infoWindow.open(map, marker[i]);
                 })
                 google.maps.event.addListener(marker[i], "click", () => {
@@ -340,109 +385,102 @@
       },
 
       showHeatmap() {
-        console.log("Heatmap Mode!")
+        console.log("Heatmap Mode!");
+        // const wx_type = 0;
         const gradient = [
           [
             // Temp
-            "rgba(255, 99, 71, 0)",
-            "rgba(255, 99, 71, 0.2)",
-            "rgba(255, 99, 71, 0.4)",
-            "rgba(255, 99, 71, 0.6)",
-            "rgba(255, 99, 71, 0.8)",
-            "rgba(255, 99, 71, 1)",
-            "rgba(255, 45, 0, 0.9)",
-            "rgba(255, 45, 0, 1)",
-            "rgba(255, 40, 0, 1)",
-            "rgba(255, 35, 0, 1)",
-            "rgba(255, 30, 0, 1)",
-            "rgba(255, 25, 0, 1)",
-            "rgba(255, 10, 0, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(255, 255, 155, 1)",
+            "rgba(255, 255, 0, 1)",
+            "rgba(255, 225, 0, 1)",
+            "rgba(255, 200, 0, 1)",
+            "rgba(255, 170, 0, 1)",
+            "rgba(255, 145, 0, 1)",
+            "rgba(255, 100, 0, 1)",
+            "rgba(255, 80, 0, 1)",
+            "rgba(245, 0, 0, 1)",
+            "rgba(220, 0, 0, 1)",
+            "rgba(145, 0, 0, 1)",
+            "rgba(110, 0, 0, 1)",
           ],
           // Humid
           [
-            "rgba(0, 255, 255, 0)",
-            "rgba(0, 255, 255, 1)",
-            "rgba(0, 191, 255, 1)",
-            "rgba(0, 127, 255, 1)",
-            "rgba(0, 63, 255, 1)",
+            "rgba(155, 255, 255, 1)",
+            "rgba(0, 225, 255, 1)",
+            "rgba(0, 200, 255, 1)",
+            "rgba(0, 170, 255, 1)",
+            "rgba(0, 145, 255, 1)",
+            "rgba(0, 100, 255, 1)",
+            "rgba(0, 60, 255, 1)",
             "rgba(0, 0, 255, 1)",
-            "rgba(0, 0, 223, 1)",
-            "rgba(0, 0, 191, 1)",
-            "rgba(0, 0, 159, 1)",
-            "rgba(0, 0, 127, 1)",
-            "rgba(63, 0, 91, 1)",
-            "rgba(127, 0, 63, 1)",
-            "rgba(191, 0, 31, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(0, 0, 200, 1)",
+            "rgba(0, 0, 150, 1)",
+            "rgba(0, 0, 100, 1)",
+            "rgba(0, 0, 50, 1)",
           ],
           // Press
           [
-            "rgba(0, 255, 255, 0)",
-            "rgba(0, 255, 255, 1)",
-            "rgba(0, 191, 255, 1)",
-            "rgba(0, 127, 255, 1)",
-            "rgba(0, 63, 255, 1)",
-            "rgba(0, 0, 255, 1)",
-            "rgba(0, 0, 223, 1)",
-            "rgba(0, 0, 191, 1)",
-            "rgba(0, 0, 159, 1)",
-            "rgba(0, 0, 127, 1)",
-            "rgba(63, 0, 91, 1)",
-            "rgba(127, 0, 63, 1)",
-            "rgba(191, 0, 31, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(155, 255, 180, 1)",
+            "rgba(0, 255, 180, 1)",
+            "rgba(0, 255, 160, 1)",
+            "rgba(0, 255, 130, 1)",
+            "rgba(0, 255, 100, 1)",
+            "rgba(0, 255, 80, 1)",
+            "rgba(0, 255, 50, 1)",
+            "rgba(0, 255, 10, 1)",
+            "rgba(0, 255, 0, 1)",
+            "rgba(0, 200, 0, 1)",
+            "rgba(0, 150, 0, 1)",
+            "rgba(0, 110, 0, 1)",
+            "rgba(0, 70, 0, 1)",
           ],
           // PM 1.0
           [
-            "rgba(0, 255, 255, 0)",
-            "rgba(0, 255, 255, 1)",
-            "rgba(0, 191, 255, 1)",
-            "rgba(0, 127, 255, 1)",
-            "rgba(0, 63, 255, 1)",
-            "rgba(0, 0, 255, 1)",
-            "rgba(0, 0, 223, 1)",
-            "rgba(0, 0, 191, 1)",
-            "rgba(0, 0, 159, 1)",
-            "rgba(0, 0, 127, 1)",
-            "rgba(63, 0, 91, 1)",
-            "rgba(127, 0, 63, 1)",
-            "rgba(191, 0, 31, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(255, 155, 255, 1)",
+            "rgba(255, 100, 255, 1)",
+            "rgba(255, 80, 255, 1)",
+            "rgba(255, 50, 255, 1)",
+            "rgba(255, 25, 255, 1)",
+            "rgba(225, 0, 225, 1)",
+            "rgba(190, 0, 190, 1)",
+            "rgba(175, 0, 175, 1)",
+            "rgba(150, 0, 150, 1)",
+            "rgba(125, 0, 125, 1)",
+            "rgba(90, 0, 90, 1)",
+            "rgba(75, 0, 75, 1)",
+            "rgba(60, 0, 60, 1)",
           ],
           // PM 2.5
           [
-            "rgba(0, 255, 255, 0)",
-            "rgba(0, 255, 255, 1)",
-            "rgba(0, 191, 255, 1)",
-            "rgba(0, 127, 255, 1)",
-            "rgba(0, 63, 255, 1)",
-            "rgba(0, 0, 255, 1)",
-            "rgba(0, 0, 223, 1)",
-            "rgba(0, 0, 191, 1)",
-            "rgba(0, 0, 159, 1)",
-            "rgba(0, 0, 127, 1)",
-            "rgba(63, 0, 91, 1)",
-            "rgba(127, 0, 63, 1)",
-            "rgba(191, 0, 31, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(255, 193, 128, 1)",
+            "rgba(255, 181, 102, 1)",
+            "rgba(255, 169, 77, 1)",
+            "rgba(255, 156, 51, 1)",
+            "rgba(255, 144, 26, 1)",
+            "rgba(255, 132, 0, 1)",
+            "rgba(230, 119, 0, 1)",
+            "rgba(204, 105, 0, 1)",
+            "rgba(179, 92, 0, 1)",
+            "rgba(153, 79, 0, 1)",
+            "rgba(128, 66, 0, 1)",
+            "rgba(102, 53, 0, 1)",
+            "rgba(77, 40, 0, 1)",
           ],
           // PM 10 
           [
-            "rgba(0, 255, 255, 0)",
-            "rgba(0, 255, 255, 1)",
-            "rgba(0, 191, 255, 1)",
-            "rgba(0, 127, 255, 1)",
-            "rgba(0, 63, 255, 1)",
-            "rgba(0, 0, 255, 1)",
-            "rgba(0, 0, 223, 1)",
-            "rgba(0, 0, 191, 1)",
-            "rgba(0, 0, 159, 1)",
-            "rgba(0, 0, 127, 1)",
-            "rgba(63, 0, 91, 1)",
-            "rgba(127, 0, 63, 1)",
-            "rgba(191, 0, 31, 1)",
-            "rgba(255, 0, 0, 1)",
+            "rgba(255, 245, 204, 1)",
+            "rgba(255, 240, 179, 1)",
+            "rgba(255, 235, 153, 1)",
+            "rgba(255, 230, 128, 1)",
+            "rgba(255, 224, 102, 1)",
+            "rgba(255, 219, 77, 1)",
+            "rgba(255, 214, 51, 1)",
+            "rgba(255, 209, 26, 1)",
+            "rgba(255, 204, 0, 1)",
+            "rgba(230, 184, 0, 1)",
+            "rgba(204, 163, 0, 1)",
+            "rgba(179, 143, 31, 1)",
+            "rgba(153, 122, 0, 1)",
           ],
         ];
 
@@ -455,17 +493,72 @@
           map: map
         });
         heatmap.set("radius", 50);
-        heatmap.set("gradient", gradient[0])
+        heatmap.set("gradient", gradient[this.wx_type])
+      },
+
+      deleteHeatmap() {
+        heatmap.setMap(null);
+        heatmap.setData([]);
       },
 
       getPoints() {
         console.log("Getting data point for heatmap")
-        for(let i = 0; i < this.allStation.length; i++) {
-          if (this.weathers[i] != undefined) {
-            console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].temp)
-            this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].temp != undefined)?this.weathers[i].temp:0})
+        this.point = [];
+        // temp
+        if( this.wx_type == 0) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].temp)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].temp != undefined)?this.weathers[i].temp:0})
+            } 
           }
         }
+        // humid
+        if( this.wx_type == 1) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].humidity)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].humidity != undefined)?this.weathers[i].humidity:0})
+            } 
+          }
+        }
+        // press
+        if( this.wx_type == 2) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pressure)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pressure != undefined)?this.weathers[i].pressure:0})
+            } 
+          }
+        }
+        // pm 1.0
+        if( this.wx_type == 3) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm1)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm1 != undefined)?this.weathers[i].pm1:0})
+            } 
+          }
+        }
+        // pm 2.5
+        if( this.wx_type == 4) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm2_5)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm2_5 != undefined)?this.weathers[i].pm2_5:0})
+            } 
+          }
+        }
+        // pm 10
+        if( this.wx_type == 5) {
+          for(let i = 0; i < this.allStation.length; i++) {
+            if (this.weathers[i] != undefined) {
+              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm10)
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm10 != undefined)?this.weathers[i].pm10:0})
+            } 
+          }
+        }
+        
         
         console.log(this.point)
         // console.log(this.point)
@@ -513,6 +606,13 @@
     top: 8px;
     left: 45%;
     border-radius: 20px;
+  }
+
+  .v-application .py-2 {
+    position: absolute;
+    top: 530px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
   }
 
   #geo-btn{
