@@ -6,7 +6,12 @@
     tile
     height = 100%
   >
-    <Drawer v-bind:station="selected.names" v-bind:weathers="weather" v-bind:isHidden="isHidden"/>
+    <Drawer 
+      v-bind:station="selected.name" 
+      v-bind:weather="weather" 
+      v-bind:isHidden="isHidden" 
+      v-bind:isHeatmap="isHeatmap"
+      v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
       <div  style="width: 20%; margin: 8px"
       >
@@ -129,7 +134,7 @@
     
     <section 
       id="map"
-      v-on:click="isSearch = false"
+      v-on:click="/*isSearch = false; isHidden = false*/"
     >
 
     </section>
@@ -162,6 +167,7 @@
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [],
         weather: {name:'HS2AR-10', id: 1, temp: 30, humid: 60, press: 1000, pm1: 3, pm25: 3, pm10: 3},
+        pm: [],
         weathers: [],
         allStation: [],
         point: [],
@@ -183,6 +189,8 @@
     mounted() {
       this.getWeatherStation().then(()=>{
         this.showUserLocationOnTheMap();
+        // this.testInterval();
+        this.showStationInSearch()
       });
       // this.getWeather(this.allStation);
       
@@ -196,19 +204,18 @@
         this.allStation = await apiService.stationList()
         // console.log(this.allStation)
         await this.setAllStation();
-        this.showStationInSearch()
         // return station
       },
 
       async getWeather(stationName){
         var temp = await apiService.weatherData(stationName);
-  
         this.weathers.push(temp);
   
       },
 
-      getPM(stationName){
-        return apiService.pmData(stationName)
+      async getPM(stationName){
+        var temp = await apiService.pmData(stationName);
+        this.pm.push(temp)
       },
 
       // async getDataWeather() {
@@ -220,58 +227,16 @@
         // Add province to each station 
         for(let i = 0; i < this.allStation.length; i++) {
           await  this.getWeather(this.allStation[i].name)
-                         
-          // this.geocodeLatlng(this.allStation[i].lat, this.allStation[i].lng, i);
+          await this.getPM(this.allStation[i].name) 
+          this.setProvinceFrom(this.allStation[i].lat, this.allStation[i].lng, i);               
         }
-        // console.log('--> Print weathers');
-        // console.log(this.weathers);
-
       },
 
       showStationInSearch() {
+        console.log(this.allStation)
         this.station = this.allStation.map((element)=>{
-          return {names:element.name + ' (จังหวัด)',latitude:element.lat,longitude:element.lng,};
+          return {names:element.name + ' (' + element.locat + ')',latitude:element.lat,longitude:element.lng,};
         })
-      },
-
-      geocodeLatlng(latitude, longitude, id) {  // Get lat long from station and return city
-        // Get address from geocoder
-        const geocoder = new google.maps.Geocoder();
-        const latlng = {
-          lat: latitude, //13.7289596, 
-          lng: longitude, //100.2218, 
-        };
-
-        // geocoder.geocode({locat}, (results, status) => {});
-        geocoder.geocode(
-          { location: latlng },
-          (
-            results,
-            status
-          ) => {
-            if (status === "OK") {
-              if (results[0]) {
-                // Search for province
-                for(let i = 0; i < 10; i++) {
-                  if(results[0].address_components[i].types[0] == "administrative_area_level_1") {
-                    var rs = results[0].address_components[i].long_name;
-                    // console.log(results[0].address_components[i].long_name)
-                    break;
-                  }
-                }
-                // console.log(rs);
-                this.allStation[id].locat = rs
-                console.log(this.allStation[id].locat)
-
-              } else {
-                window.alert("No results found");
-
-              }
-            } else {
-              window.alert("Geocoder failed due to: " + status);
-            }
-          }
-        );
       },
       
       // Get current position and set center
@@ -279,7 +244,7 @@
         if(navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
-              this.getAddressFrom(
+              this.setUserLocation(
                 position.coords.latitude,
                 position.coords.longitude
               );
@@ -300,27 +265,39 @@
       },
 
       // Get user location
-      getAddressFrom(lat, long) {
+      setUserLocation(lat, long) {
         this.userLocat.latitude = lat
         this.userLocat.longitude = long
         // console.log(this.userLocat.latitude,this.userLocat.longitude)
-        // axios.get(
-        //   "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
-        //   + lat + "," 
-        //   + long 
-        //   + "&key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8").then(response => {
-        //     if(response.data.error_message) {
-        //       console.log(response.data.error_message);
-        //     }
-        //     else {
-        //       this.stations = response.data.results[0].formatted_address
-        //     }
-        //   })
-        //   .catch(error => {
-        //     console.log(error.message);
-        //   })
+        // this.setProvinceFrom(lat, long);
+      },
+
+      setProvinceFrom(lat, long, index) {
+        axios.get(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
+          + lat + "," 
+          + long 
+          + "&key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8").then(response => {
+            if(response.data.error_message) {
+              console.log(response.data.error_message);
+            }
+            else {
+              // this.stations = response.data.results[0].formatted_address
+              for(let i=0; i < response.data.results[0].address_components.length; i++) {
+                var type = response.data.results[0].address_components[i].types[0];
+                if(type == "administrative_area_level_1") {
+                  this.allStation[index].locat = response.data.results[0].address_components[i].long_name
+                  console.log(this.allStation[index].locat)
+                }
+              }
+            }
+          })
+          .catch(error => {
+            console.log(error.message);
+          })
       },
       
+
       showStationOnTheMap(latitude, longitude) {
         // Create a map object
         map = new google.maps.Map(document.getElementById("map"), {
@@ -374,14 +351,25 @@
                   // infoWindow.setBackgroundColor("rgb(153, 255, 73)");
                   infoWindow.open(map, marker[i]);
                 })
-                google.maps.event.addListener(marker[i], "click", () => {
-                  this.selected = this.allStation[i];
-                  this.weather = this.weathers[i];
-                  this.isHidden = true;
-                });
+                google.maps.event.addListener(marker[i], "click", (event,weathers = this.weathers , index = i) => {
+                  // this.selected = this.allStation[index];
+                  // this.weather = weathers[index];
+                  // console.log(this.isHidden)
+                  // this.isHidden = true;
+                  // console.log("i =",index)
+                  this.showPopup(index);
+                }); 
           }
    
         }
+      },
+
+      showPopup(index){
+        this.selected = this.allStation[index];
+        this.weather = this.weathers[index];
+        this.isHidden = true;
+        console.log(this.selected)
+        console.log("i =",index)
       },
 
       showHeatmap() {

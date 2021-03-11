@@ -44,16 +44,18 @@ async function weatherData(stationnname) {
 
 }
 
-function pmData(stationname){
-  axios.get('http://127.0.0.1:8000/weather/pmdata/?search=' + stationname,{
+async function pmData(stationname){
+  var result = await axios.get('http://127.0.0.1:8000/weather/pmdata/?search=' + stationname,{
     headers:{
       'Accept': 'application/json', 
     },
-  }).then((data)=>{
-        console.log(data.data.results[0])
-        return data.results
-  }).catch((e)=>{
-        console.log(e)
   })
+  // .then((data)=>{
+  //       console.log(data.data.results[0])
+  //       return data.results
+  // }).catch((e)=>{
+  //       console.log(e)
+  // })
+  return result.data.results;
 
 }
