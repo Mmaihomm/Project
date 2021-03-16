@@ -4,7 +4,7 @@
     <!--- open sidebar button --->
     <v-card>
       <v-btn
-        v-if="!isHidden"
+        v-if="!isHidden && !isHeatmap"
         absolute
         dark
         fab
@@ -57,7 +57,7 @@
             class=" transparent text-center" 
             style="height: 50px;  font-size: 24px; font-family: 'Century Gothic';"
             >
-            {{ station }}  
+              {{ station }}  
             </v-card>
             <v-card
             v-model="date"
@@ -66,11 +66,11 @@
             class="transparent text-center"
             style="height: 50px;  font-size: 16px; font-family: 'Century Gothic';"
             >
-            {{getTimeStamp()}} 
+              {{getTimeStamp()}} 
             </v-card>
-            
         </v-col>
       </v-row>
+
       <v-row class="justify-center" >
         <v-col cols="11" >
           <v-card
@@ -255,51 +255,194 @@
     <!---------- Heatmap sidebar ----------->
     <v-card
       absolute 
-      v-if="isHidden && isHeatmap"
-      class="flex-column justify-end align-self-end"
-      dark
+      v-if="isHeatmap"
+      class="flex-column justify-end align-self-end text-center"
       style="
         overflow-x: hidden;
         z-index: 10;
         position: absolute;
         right: 0px;
-        width: 400px;
-        height: 100%;
-        background-image: linear-gradient(to bottom, rgba(77, 133, 233),rgba(255, 255, 255,0.5));"
+        width: 24%;
+        height: 80%;
+        margin: 20px;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.2);"
     >
       <v-row>
-        <v-col cols="2">
-          <v-btn
-            app
-            dark
-            text
-            fab
-            small
-            v-on:click="isHidden = false"
-            style="left: 8px; top: 8px; padding: 8px"
-          >
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-        </v-col>
-        <v-col cols="8">
-            <v-card
-            v-model="station" 
-            dark 
-            flat
-            class=" transparent text-center" 
-            style="height: 50px;  font-size: 24px; font-family: 'Century Gothic';"
-            >
-            {{ station }}  
-            </v-card>
-            <v-card
-            v-model="date"
-            dark
+        <v-card-title d-flex class="flex-column pa-2">Average </v-card-title>
+      </v-row>
+
+      <v-row>
+        <v-card
+          flat
+          class=" transparent text-center" 
+          style="
+            height: 20%;  
+            justify-items: center;
+            justify-content: center;
+            font-size: 48px; 
+            font-family: 'Century Gothic';"
+        >
+          {{ average.all }}  
+        </v-card>
+      </v-row>
+              
+      <v-row >
+        <v-col cols="6">
+          <v-card
             flat
             class="transparent text-center"
-            style="height: 50px;  font-size: 16px; font-family: 'Century Gothic';"
             >
-            {{getTimeStamp()}} 
-            </v-card>
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">North</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.n}}
+              </v-card>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card
+            flat
+            class="transparent text-center"
+            >
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">North-east</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.ne}}
+              </v-card>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="6">
+          <v-card
+            flat
+            class="transparent text-center"
+            >
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">East</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.e}}
+              </v-card>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card
+            flat
+            class="transparent text-center"
+            >
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">Central</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.c}}
+              </v-card>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="6">
+          <v-card
+            flat
+            class="transparent text-center"
+            >
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">West</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.w}}
+              </v-card>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card
+            flat
+            class="transparent text-center"
+            >
+              <v-card 
+                flat 
+                class="transparent text-left font-weight-medium" 
+                style="
+                padding-left: 8px;
+                font-size: 14px;">South</v-card>
+              <v-card
+                flat
+                style="
+                  background-color: rgba(255, 255, 255, 0.5);
+                  color: rgba(0, 0, 0, 1);
+                  padding: 8px;
+                  margin: 8px
+                  height: 50px;  
+                  font-size: 24px; 
+                  font-family: 'Century Gothic';">
+                {{average.s}}
+              </v-card>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -379,6 +522,7 @@ export default {
     weathers: Array,
     isHidden: Boolean,
     isHeatmap: Boolean,
+    average: Object,
   },
 
   data() {
@@ -397,5 +541,11 @@ export default {
 </script>
 
 <style >
-  
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-right: -12px;
+    margin-left: -12px;
+}
 </style>

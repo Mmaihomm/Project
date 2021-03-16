@@ -11,6 +11,7 @@
       v-bind:weather="weather" 
       v-bind:isHidden="isHidden" 
       v-bind:isHeatmap="isHeatmap"
+      v-bind:average="average"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
       <div  style="width: 20%; margin: 8px"
@@ -70,7 +71,7 @@
 
         <v-btn
           id="heatmap-btn"
-          v-on:click="isHeatmap=true; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+          v-on:click="isHeatmap=true; calAverage(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
           Heatmap
         </v-btn>
@@ -91,37 +92,37 @@
         >
           <v-btn 
             value= 0
-            v-on:click="wx_type = 0; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 0; average = ave.temp; deleteHeatmap(); showHeatmap()">
             Temperature
           </v-btn>
 
           <v-btn 
             value= 1
-            v-on:click="wx_type = 1; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 1;average = ave.humid; deleteHeatmap(); showHeatmap()">
             Humidity
           </v-btn>
 
           <v-btn 
             value= 2
-            v-on:click="wx_type = 2; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 2; average = ave.press; deleteHeatmap(); showHeatmap()">
             Pressure
           </v-btn>
 
           <v-btn 
             value= 3
-            v-on:click="wx_type = 3; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 3; average = ave.pm1; deleteHeatmap(); showHeatmap()">
             PM 1.0
           </v-btn>
 
           <v-btn 
             value= 4
-            v-on:click="wx_type = 4; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 4; average = ave.pm2_5; deleteHeatmap(); showHeatmap()">
             PM 2.5
           </v-btn>
 
           <v-btn 
             value= 5
-            v-on:click="wx_type = 5; deleteHeatmap(); showHeatmap()">
+            v-on:click="wx_type = 5; average = ave.pm10; deleteHeatmap(); showHeatmap()">
             PM 10
           </v-btn>
 
@@ -150,15 +151,32 @@
   import Drawer from "../components/NavDraw";
 
   let map, heatmap;
+
+  const regions = {
+    north: ["เชียงราย", "เชียงใหม่", "น่าน", "พะเยา", "แพร่", "แม่ฮ่องสอน", "ลำปาง", "ลำพูน", "อุตรดิตถ์" ],
+    
+    northeast: ["กาฬสินธุ์", "ขอนแก่น", "ชัยภูมิ", "นครพนม", "นครราชสีมา", "บึงกาฬ", "บุรีรัมย์", 
+                "มหาสารคาม", "มุกดาหาร", "ยโสธร", "ร้อยเอ็ด", "เลย", "สกลนคร", "สุรินทร์", "ศรีสะเกษ",
+                "หนองคาย", "หนองบัวลำภู", "อุดรธานี", "อุบลราชธานี", "อำนาจเจริญ" ],
+    
+    east: ["จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ตราด", "ปราจีนบุรี", "ระยอง", "สระแก้ว" ],
+    
+    central: ["กำแพงเพชร", "กรุงเทพมหานคร", "ชัยนาท", "นครนายก", "นครปฐม", "นครสวรรค์", "นนทบุรี", "ปทุมธานี",
+              "พระนครศรีอยุธยา", "พิจิตร", "พิษณุโลก", "เพชรบูรณ์", "ลพบุรี", "สมุทรปราการ", "สมุทรสงคราม",
+              "สมุทรสาคร", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สระบุรี", "อ่างทอง", "อุทัยธานี" ],
+    
+    west: ["กาญจนบุรี", "ตาก", "ประจวบคีรีขันธ", "เพชรบุรี", "ราชบุรี" ],
+    
+    south: ["กระบี่", "ชุมพร", "ตรัง", "นครศรีธรรมราช", "นราธิวาส", "ปัตตานี", "พังงา", "พัทลุง", 
+            "ภูเก็ต", "ระนอง", "สตูล", "สงขลา", "สุราษฎร์ธานี", "ยะลา" ],
+  };
   
   export default { 
     name: "GoogleMap",
-
     components:{
       Drawer,
     },
     data() {
-      
       return {
         isSearch: false,
         isHidden: false,
@@ -171,6 +189,16 @@
         weathers: [],
         allStation: [],
         point: [],
+        ave: {
+          temp: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
+          humid: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
+          press: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
+          pm1: {
+            all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
+          pm2_5: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0, },
+          pm10: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
+        },
+        average: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
         wx_type: 0,
 
       };
@@ -191,6 +219,7 @@
         this.showUserLocationOnTheMap();
         // this.testInterval();
         this.showStationInSearch()
+        this.calAverage()
       });
       // this.getWeather(this.allStation);
       
@@ -221,6 +250,93 @@
       // async getDataWeather() {
       //   this.allStation = await this.getWeatherStation();
       // },
+
+      getKeyByValue(value) {
+        // filter in north
+        let filtered = regions.north.filter(function(ele, index, array,  val = value) {
+          if (ele == val) {
+            return ele
+          }
+        })
+
+        if (filtered == '') {
+          // console.log("No pv in north")
+
+          // filter in northeast
+          filtered = regions.northeast.filter(function(ele, index, array,  val = value) {
+            if (ele == val) {
+              return ele
+            }
+          })
+
+          if (filtered == '') {
+            // console.log("No pv in northeast")
+
+            // filter in central
+            filtered = regions.central.filter(function(ele, index, array,  val = value) {
+              if (ele == val) {
+                return ele
+              }
+            })
+
+            if (filtered == '') {
+              // console.log("No pv in central")
+
+              // filter in east
+              filtered = regions.east.filter(function(ele, index, array,  val = value) {
+                if (ele == val) {
+                  return ele
+                }
+              })
+
+              if (filtered == '') {
+                // console.log("No pv in east")
+
+                // filter in east
+                filtered = regions.west.filter(function(ele, index, array,  val = value) {
+                  if (ele == val) {
+                    return ele
+                  }
+                })
+
+                if (filtered == '') {
+                  // console.log("No pv in west")
+
+                  // filter in south
+                  filtered = regions.south.filter(function(ele, index, array,  val = value) {
+                    if (ele == val) {
+                      return ele
+                    }
+                  })
+
+                  if (filtered == '') {
+                    console.log("No pv in Thailand")
+                  }
+                  else {
+                    return 'south'
+                  }
+                }
+                else {
+                  return 'west'
+                }
+              }
+              else {
+                return 'east'
+              }
+            }
+            else {
+              return 'central'
+            }
+          }
+          else {
+            return 'northeast'
+          }
+        }
+        else {
+          return 'north'
+        }
+        // return Object.keys(object).find(key => object[key] === value);
+      },
 
       async setAllStation() {
         // console.log(this.allStation)
@@ -287,7 +403,9 @@
                 var type = response.data.results[0].address_components[i].types[0];
                 if(type == "administrative_area_level_1") {
                   this.allStation[index].locat = response.data.results[0].address_components[i].long_name
-                  console.log(this.allStation[index].locat)
+                  this.allStation[index].region = this.getKeyByValue(this.allStation[index].locat)
+                  // console.log("Region of",this.allStation[index].locat," is",this.allStation[index].region)
+                  // console.log(this.allStation[index].locat)
                 }
               }
             }
@@ -370,6 +488,148 @@
         this.isHidden = true;
         console.log(this.selected)
         console.log("i =",index)
+      },
+
+      calAverage() {
+        var temp_sum = 0; var temp_n = 0; var temp_ne = 0; var temp_e = 0; var temp_c = 0; var temp_w = 0; var temp_s = 0;
+        var humid_sum = 0; var humid_n = 0; var humid_ne = 0; var humid_e = 0; var humid_c = 0; var humid_w = 0; var humid_s = 0;
+        var press_sum = 0; var press_n = 0; var press_ne = 0; var press_e = 0; var press_c = 0; var press_w = 0; var press_s = 0;
+        var pm1_sum = 0; var pm1_n = 0; var pm1_ne = 0; var pm1_e = 0; var pm1_c = 0; var pm1_w = 0; var pm1_s = 0;
+        var pm2_5_sum = 0; var pm2_5_n = 0; var pm2_5_ne = 0; var pm2_5_e = 0; var pm2_5_c = 0; var pm2_5_w = 0; var pm2_5_s = 0;
+        var pm10_sum = 0; var pm10_n = 0; var pm10_ne = 0; var pm10_e = 0; var pm10_c = 0; var pm10_w = 0; var pm10_s = 0;
+        var undef_data = 0; var n_l = 0; var ne_l = 0; var e_l = 0; var c_l = 0; var w_l = 0; var s_l = 0;
+        console.log("Calculate average")
+        const length = this.weathers.length
+        for(let i = 0; i < length; i++) {
+          if(this.weathers[i] != undefined) {
+            temp_sum += this.weathers[i].temp;
+            humid_sum += this.weathers[i].humidity;
+            press_sum += this.weathers[i].pressure;
+            pm1_sum += this.weathers[i].pm1;
+            pm2_5_sum += this.weathers[i].pm2_5;
+            pm10_sum += this.weathers[i].pm10;
+
+            // north
+            if(this.allStation[i].region == 'north') {
+              console.log("North!")
+              n_l++;
+              temp_n += this.weathers[i].temp;
+              humid_n += this.weathers[i].humidity;
+              press_n += this.weathers[i].pressure;
+              pm1_n += this.weathers[i].pm1;
+              pm2_5_n += this.weathers[i].pm2_5;
+              pm10_n += this.weathers[i].pm10;
+            }
+
+            if(this.allStation[i].region == 'northeast') {
+              console.log("Northeast!")
+              ne_l++;
+              temp_ne += this.weathers[i].temp;
+              humid_ne += this.weathers[i].humidity;
+              press_ne += this.weathers[i].pressure;
+              pm1_ne += this.weathers[i].pm1;
+              pm2_5_ne += this.weathers[i].pm2_5;
+              pm10_ne += this.weathers[i].pm10;
+            }
+
+            if(this.allStation[i].region == 'east') {
+              console.log("East!")
+              e_l++;
+              temp_e += this.weathers[i].temp;
+              humid_e += this.weathers[i].humidity;
+              press_e += this.weathers[i].pressure;
+              pm1_e += this.weathers[i].pm1;
+              pm2_5_e += this.weathers[i].pm2_5;
+              pm10_e += this.weathers[i].pm10;
+            }
+
+            if(this.allStation[i].region == 'central') {
+              console.log("Central!")
+              c_l++;
+              temp_c += this.weathers[i].temp;
+              humid_c += this.weathers[i].humidity;
+              press_c += this.weathers[i].pressure;
+              pm1_c += this.weathers[i].pm1;
+              pm2_5_c += this.weathers[i].pm2_5;
+              pm10_c += this.weathers[i].pm10;
+            }
+
+            if(this.allStation[i].region == 'west') {
+              console.log("West!")
+              w_l++;
+              temp_w += this.weathers[i].temp;
+              humid_w += this.weathers[i].humidity;
+              press_w += this.weathers[i].pressure;
+              pm1_w += this.weathers[i].pm1;
+              pm2_5_w += this.weathers[i].pm2_5;
+              pm10_w += this.weathers[i].pm10;
+            }
+
+            if(this.allStation[i].region == 'south') {
+              console.log("South!")
+              s_l++;
+              temp_s += this.weathers[i].temp;
+              humid_s += this.weathers[i].humidity;
+              press_s += this.weathers[i].pressure;
+              pm1_s += this.weathers[i].pm1;
+              pm2_5_s += this.weathers[i].pm2_5;
+              pm10_s += this.weathers[i].pm10;
+            }
+          }
+          else {
+            undef_data++;
+          }
+        }
+        console.log(temp_sum, (length-undef_data))
+        this.ave.temp.all = (temp_sum/ (length-undef_data)).toFixed(2);
+        this.ave.temp.n = (temp_n / n_l).toFixed(2)
+        this.ave.temp.ne = (temp_ne / ne_l).toFixed(2)
+        this.ave.temp.e = (temp_e / e_l).toFixed(2)
+        this.ave.temp.c = (temp_c / c_l).toFixed(2)
+        this.ave.temp.w = (temp_w / w_l).toFixed(2)
+        this.ave.temp.s = (temp_s / s_l).toFixed(2)
+
+        this.ave.humid.all = (humid_sum / (length-undef_data)).toFixed(2);
+        this.ave.humid.n = (humid_n / n_l).toFixed(2)
+        this.ave.humid.ne = (humid_ne / ne_l).toFixed(2)
+        this.ave.humid.e = (humid_e / e_l).toFixed(2)
+        this.ave.humid.c = (humid_c / c_l).toFixed(2)
+        this.ave.humid.w = (humid_w / w_l).toFixed(2)
+        this.ave.humid.s = (humid_s / s_l).toFixed(2)
+
+        this.ave.press.all = (press_sum / (length-undef_data)).toFixed(2);
+        this.ave.press.n = (press_n / n_l).toFixed(2)
+        this.ave.press.ne = (press_ne / ne_l).toFixed(2)
+        this.ave.press.e = (press_e / e_l).toFixed(2)
+        this.ave.press.c = (press_c / c_l).toFixed(2)
+        this.ave.press.w = (press_w / w_l).toFixed(2)
+        this.ave.press.s = (press_s / s_l).toFixed(2)
+
+        this.ave.pm1.all = (pm1_sum / (length-undef_data)).toFixed(2);
+        this.ave.pm1.n = (pm1_n / n_l).toFixed(2)
+        this.ave.pm1.ne = (pm1_ne / ne_l).toFixed(2)
+        this.ave.pm1.e = (pm1_e / e_l).toFixed(2)
+        this.ave.pm1.c = (pm1_c / c_l).toFixed(2)
+        this.ave.pm1.w = (pm1_w / w_l).toFixed(2)
+        this.ave.pm1.s = (pm1_s / s_l).toFixed(2)
+
+        this.ave.pm2_5.all = (pm2_5_sum / (length-undef_data)).toFixed(2);
+        this.ave.pm2_5.n = (pm2_5_n / n_l).toFixed(2)
+        this.ave.pm2_5.ne = (pm2_5_ne / ne_l).toFixed(2)
+        this.ave.pm2_5.e = (pm2_5_e / e_l).toFixed(2)
+        this.ave.pm2_5.c = (pm2_5_c / c_l).toFixed(2)
+        this.ave.pm2_5.w = (pm2_5_w / w_l).toFixed(2)
+        this.ave.pm2_5.s = (pm2_5_s / s_l).toFixed(2)
+
+        this.ave.pm10.all = (pm10_sum / (length-undef_data)).toFixed(2);
+        this.ave.pm10.n = (pm10_n / n_l).toFixed(2)
+        this.ave.pm10.ne = (pm10_ne / ne_l).toFixed(2)
+        this.ave.pm10.e = (pm10_e / e_l).toFixed(2)
+        this.ave.pm10.c = (pm10_c / c_l).toFixed(2)
+        this.ave.pm10.w = (pm10_w / w_l).toFixed(2)
+        this.ave.pm10.s = (pm10_s / s_l).toFixed(2)
+
+        console.log(this.ave)
       },
 
       showHeatmap() {
