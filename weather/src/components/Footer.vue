@@ -13,7 +13,7 @@
         style="padding-top: 4px; font-size: 80%"
         cols="12"
       >
-        <p>Visualization Based on APRS Data Network. <a href="https://aprs.fi" target="_blank" style="color:yellow;">Go to APRS.fi </a></p>
+        <p style="font-size:90%;">Visualization Based on APRS Data Network. <a href="https://aprs.fi" target="_blank" style="color:yellow;">Go to APRS.fi </a></p>
       </v-col>
     </v-footer>
   </v-card>

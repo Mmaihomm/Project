@@ -7,7 +7,7 @@
             elevate-on-scroll
             >
             <div class="d-flex align-center">
-                <h1>APRS WEATHER VISUALIZATION</h1>
+                <h3>APRS WEATHER VISUALIZATION</h3>
             </div>
             </v-toolbar>
         </nav>

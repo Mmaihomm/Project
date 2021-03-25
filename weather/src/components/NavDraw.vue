@@ -11,7 +11,7 @@
         buttom
         right
         color="#0A275A"
-        style="top: 8px"
+        style="top: 60px;"
         v-on:click="isHidden = true"
       >
         <v-icon>mdi-monitor-dashboard</v-icon>
@@ -252,23 +252,53 @@
     </v-card>
     <!------------ end sidebar --------->
 
+    
+    <!-- open heatmap sidebar -->
+    <v-card>
+      <v-btn
+        v-if="!isHiddenHeatmap && isHeatmap"
+        absolute
+        dark
+        fab
+        buttom
+        right
+        color="#0A275A"
+        style="top: 60px;"
+        v-on:click="isHiddenHeatmap = true"
+      >
+        <v-icon>mdi-monitor-dashboard</v-icon>
+      </v-btn>
+    </v-card>
+    <!-- -------------------- -->
     <!---------- Heatmap sidebar ----------->
     <v-card
       absolute 
-      v-if="isHeatmap"
+      v-if="isHeatmap && isHiddenHeatmap"
       class="flex-column justify-end align-self-end text-center"
       style="
         overflow-x: hidden;
         z-index: 10;
         position: absolute;
         right: 0px;
-        width: 24%;
-        height: 80%;
-        margin: 20px;
+        width: 400px;
+        height: 100%;
+        <!-- margin: 20px; -->
         padding: 20px;
-        background-color: rgba(0, 0, 0, 0.2);"
+        background-color: rgba(64, 64, 64,0.8);"
     >
+      
       <v-row>
+        <v-btn
+            app
+            dark
+            text
+            fab
+            small
+            v-on:click="isHiddenHeatmap = false;"
+            style="left: 8px; top: 8px; padding: 8px;"
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
         <v-card-title d-flex class="flex-column pa-2">Average </v-card-title>
       </v-row>
 
@@ -522,6 +552,7 @@ export default {
     weathers: Array,
     isHidden: Boolean,
     isHeatmap: Boolean,
+    isHiddenHeatmap: Boolean,
     average: Object,
   },
 

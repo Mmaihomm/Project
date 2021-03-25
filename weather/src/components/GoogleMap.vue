@@ -14,17 +14,19 @@
       v-bind:average="average"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
-      <div  style="width: 20%; margin: 8px"
-      >
-      <v-btn 
-        rounded
-        fab
-        elevation="10"
-        v-if="!isSearch"
-        v-on:click="isSearch = true"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <div  style="width: 20%; margin: 8px">
+        <row container gutter="{12}">
+        <v-btn 
+          rounded
+          fab
+          elevation="10"
+          v-if="!isSearch"
+          v-on:click="isSearch = true"
+          style="top:40px;"
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </row>
 
       <!-- <v-toolbar
         class = "searching-tab rounded-xl"
@@ -36,47 +38,58 @@
         style="top: 8px; left: 8px;"
         
       > -->
-      
-        <v-autocomplete
-          v-if="isSearch"
-          hide-details
-          floating
-          single-line
-          rounded
+      <row flex container gutter="{12}">
+        <column xs="{12}" md="{4}" lg="{3}">
+          <v-autocomplete
+            v-if="isSearch"
+            hide-details
+            floating
+            single-line
+            rounded
+            style="width:200%; font-size:80%; top:35px;"
+            dense
+            solo
+            placeholder="Enter station"
+            v-model="selected"
+            :items = "station"
+            hide-no-data
+            clearable
+            item-text="names"
+            item-value="names"
+            return-object
           
-          dense
-          solo
-          placeholder="Enter weather station"
-          v-model="selected"
-          :items = "station"
-          hide-no-data
-          clearable
-          item-text="names"
-          item-value="names"
-          return-object
-          
-          @change="showStationOnTheMap(selected.latitude,selected.longitude)"
-        ></v-autocomplete>
-      </div>  
+            @change="showStationOnTheMap(selected.latitude,selected.longitude)"
+          ></v-autocomplete>
+        </column>
+        
+        </row>   
+        </div>  
 
-      <div
-        id="toggleMap"
-      >
-        <v-btn
-          id="geo-btn"
-          v-on:click="isHeatmap=false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
-        >
-          Geolocation
-        </v-btn>
 
-        <v-btn
-          id="heatmap-btn"
-          v-on:click="isHeatmap=true; calAverage(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
-        >
-          Heatmap
-        </v-btn>
-      </div>
+        <row flex style="">
+          <div
+            id="toggleMap"
+            style="left:40%"
+          >
+            <v-btn
+              id="geo-btn"
+              v-on:click="isHeatmap=false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+              style="font-size:80%; ;"
+            >
+              Geolocation
+            </v-btn>
 
+            <v-btn
+              id="heatmap-btn"
+              v-on:click="isHeatmap=true; calAverage(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+              style="font-size:80%;"
+            >
+              Heatmap
+            </v-btn>
+          </div>
+        </row>
+
+  <row flex container gutter="{12}">
       <v-col
         cols="12"
         class="py-2"
@@ -84,51 +97,60 @@
         v-if="isHeatmap"
         
       >
+      
         <v-btn-toggle
           v-model="wx_type"
           mandatory
           color="deep-purple accent-3"
           group
         >
-          <v-btn 
+          <column xs="{12}" md="{4}" lg="{3}">
+          <v-btn
+            class="transparent"
             value= 0
             v-on:click="wx_type = 0; average = ave.temp; deleteHeatmap(); showHeatmap()">
             Temperature
           </v-btn>
 
           <v-btn 
+            class="transparent"
             value= 1
             v-on:click="wx_type = 1;average = ave.humid; deleteHeatmap(); showHeatmap()">
             Humidity
           </v-btn>
 
           <v-btn 
+            class="transparent"
             value= 2
             v-on:click="wx_type = 2; average = ave.press; deleteHeatmap(); showHeatmap()">
             Pressure
           </v-btn>
 
           <v-btn 
+            class="transparent"
             value= 3
             v-on:click="wx_type = 3; average = ave.pm1; deleteHeatmap(); showHeatmap()">
             PM 1.0
           </v-btn>
 
           <v-btn 
+            class="transparent"
             value= 4
             v-on:click="wx_type = 4; average = ave.pm2_5; deleteHeatmap(); showHeatmap()">
             PM 2.5
           </v-btn>
 
           <v-btn 
+            class="transparent"
             value= 5
             v-on:click="wx_type = 5; average = ave.pm10; deleteHeatmap(); showHeatmap()">
             PM 10
           </v-btn>
-
+          </column>
         </v-btn-toggle>
+      
       </v-col>
-
+  </row>
       <!-- </v-toolbar> -->
       
     </section>
@@ -146,9 +168,14 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8&libraries=places,visualization" async=""></script>
 
 <script>
+  import Vue from 'vue';
+  import { Row, Column } from 'vue-grid-responsive';
   import axios from 'axios'
   import {apiService} from "../service"
   import Drawer from "../components/NavDraw";
+
+  Vue.component('row', Row);
+  Vue.component('column', Column);
 
   let map, heatmap;
 
