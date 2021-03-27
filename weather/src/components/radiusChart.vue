@@ -14,6 +14,7 @@ export default {
     props:{
        serie:Array, 
        color:String,
+       value:Number,
     },
     data() {
       return {
@@ -50,7 +51,7 @@ export default {
                                         value: {
                                             offsetY: -2,
                                             fontSize: '15px',
-                                            formatter: function (val) {
+                                            formatter: function (val = this.value) {
                                                 return val 
                                                 }
                                             }

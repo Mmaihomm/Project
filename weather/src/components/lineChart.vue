@@ -18,6 +18,7 @@ export default {
         dataLow:Array,
         Min:Number,
         Max:Number,
+        lineColor:Array,
     },
     data() {
         return{
@@ -47,7 +48,7 @@ export default {
                             show: false,
                         }
                     },
-                    colors: ['#77B6EA', '#545454'],
+                    colors: this.lineColor,
                     dataLabels: {
                         enabled: true,
                     },
@@ -71,7 +72,7 @@ export default {
                         size: 1
                     },
                     xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Now'],
                         title: {
                             text: 'time'
                         }

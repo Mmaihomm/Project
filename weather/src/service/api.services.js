@@ -4,6 +4,7 @@ export const apiService = {
   weatherData,
   stationList,
   pmData,
+  historyData,
 };
 // axios.defaults.withCredentials = true
 
@@ -41,7 +42,6 @@ async function weatherData(stationnname) {
     },
   })
   return result.data.results[0];
-
 }
 
 async function pmData(stationname){
@@ -58,4 +58,13 @@ async function pmData(stationname){
   // })
   return result.data.results;
 
+}
+
+async function historyData(stationnname) {
+  var result = await  axios.get('http://127.0.0.1:8000/weather/weatherhistory/?search=' + stationnname ,{
+    headers:{
+      'Accept': 'application/json', 
+    },
+  })
+  return result.data.results;
 }

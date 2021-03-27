@@ -12,6 +12,7 @@
       v-bind:isHidden="isHidden" 
       v-bind:isHeatmap="isHeatmap"
       v-bind:average="average"
+      v-bind:wx_type="wx_type"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
       <div  style="width: 20%; margin: 8px"
@@ -21,7 +22,7 @@
         fab
         elevation="10"
         v-if="!isSearch"
-        v-on:click="isSearch = true"
+        v-on:click="isSearch = true; isHidden = false"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -59,23 +60,27 @@
         ></v-autocomplete>
       </div>  
 
-      <div
+      <v-btn-toggle
         id="toggleMap"
+        Rounded
+        mandatory
+        v-model="toggleColorsText"
+        color="deep-purple darken-4"
       >
         <v-btn
-          id="geo-btn"
-          v-on:click="isHeatmap=false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+          text
+          v-on:click="isHeatmap=false; isHidden = false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
           Geolocation
         </v-btn>
 
         <v-btn
-          id="heatmap-btn"
-          v-on:click="isHeatmap=true; calAverage(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+          text
+          v-on:click="isHeatmap=true; isHidden = false; calAverage(); setStartHM(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
           Heatmap
         </v-btn>
-      </div>
+      </v-btn-toggle>
 
       <v-col
         cols="12"
@@ -135,7 +140,7 @@
     
     <section 
       id="map"
-      v-on:click="/*isSearch = false; isHidden = false*/"
+      v-on:click="isSearch = false; closeInfoWindow();"
     >
 
     </section>
@@ -143,7 +148,7 @@
 </template>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8&libraries=places,visualization" async=""></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWSbC4CgahJB93uFsTvH29kPuP0B3VR0A&libraries=places,visualization" async=""></script>
 
 <script>
   import axios from 'axios'
@@ -151,6 +156,7 @@
   import Drawer from "../components/NavDraw";
 
   let map, heatmap;
+  var infoWindow;
 
   const regions = {
     north: ["เชียงราย", "เชียงใหม่", "น่าน", "พะเยา", "แพร่", "แม่ฮ่องสอน", "ลำปาง", "ลำพูน", "อุตรดิตถ์" ],
@@ -181,6 +187,7 @@
         isSearch: false,
         isHidden: false,
         isHeatmap: false,
+        hm_start: true,
         userLocat: {latitude: null, longitude: null},
         selected: {names: 'HS2AR-10', latitude: 15.6454, longitude: 100.2218, id: 1},
         station: [],
@@ -188,6 +195,8 @@
         pm: [],
         weathers: [],
         allStation: [],
+        historyRDT: [],
+        historyDT: {all:{}, name: '', temp_min: [], temp_max: [], days: ['Today']},
         point: [],
         ave: {
           temp: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
@@ -200,6 +209,7 @@
         },
         average: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
         wx_type: 0,
+        toggleColorsText: 0,
 
       };
     },
@@ -220,6 +230,7 @@
         // this.testInterval();
         this.showStationInSearch()
         this.calAverage()
+        // this.getHistory(HS2AR-10)
       });
       // this.getWeather(this.allStation);
       
@@ -239,10 +250,14 @@
       async getWeather(stationName){
         var temp = await apiService.weatherData(stationName);
         this.weathers.push(temp);
-  
       },
 
-      async getPM(stationName){
+      async getHistory(stationName){
+        var tmp = await apiService.historyData(stationName);
+        this.historyRDT.push(tmp)
+      },
+
+      async getPM(stationName, id){
         var temp = await apiService.pmData(stationName);
         this.pm.push(temp)
       },
@@ -250,6 +265,13 @@
       // async getDataWeather() {
       //   this.allStation = await this.getWeatherStation();
       // },
+
+      setStartHM() {
+        if(this.hm_start == true) {
+          this.average = this.ave.temp
+          this.hm_start = false
+        }
+      },
 
       getKeyByValue(value) {
         // filter in north
@@ -342,8 +364,9 @@
         // console.log(this.allStation)
         // Add province to each station 
         for(let i = 0; i < this.allStation.length; i++) {
-          await  this.getWeather(this.allStation[i].name)
-          await this.getPM(this.allStation[i].name) 
+          await this.getWeather(this.allStation[i].name);
+          await this.getHistory(this.allStation[i].name);
+          // await this.getPM(this.allStation[i].name, i) 
           this.setProvinceFrom(this.allStation[i].lat, this.allStation[i].lng, i);               
         }
       },
@@ -393,7 +416,7 @@
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=" 
           + lat + "," 
           + long 
-          + "&key=AIzaSyBbGY7ji1hmf81p2LbTPHOOgXCroqeEmk8").then(response => {
+          + "&key=AIzaSyBWSbC4CgahJB93uFsTvH29kPuP0B3VR0A").then(response => {
             if(response.data.error_message) {
               console.log(response.data.error_message);
             }
@@ -437,7 +460,7 @@
 
       showMarker() {
         console.log("Marker Mode!")
-        const infoWindow = new google.maps.InfoWindow();
+        infoWindow = new google.maps.InfoWindow();
         // console.log(this.weathers)
         // Add Marker
 
@@ -448,7 +471,7 @@
 
           const lat = this.allStation[i].lat;
           const lng = this.allStation[i].lng;
-          if(this.weathers[i] != undefined){
+          if(this.allStation[i] != undefined){
             marker.push(new google.maps.Marker({
                   position: new google.maps.LatLng(lat, lng),
                   animation: google.maps.Animation.DROP,
@@ -460,7 +483,7 @@
                     infoWindow.setContent(
                     `<div id="stationName" style="font-weight:bold; font-size:16px;">${weathers[index].name}</div><br>`+
                     `<div style="position: left;"><div id="temp" style="font-size:14px">Temperature : ${weathers[index]?.temp}  ํC</div>`+
-                    `<div id="humid" style="font-size:14px">Humidity : ${ (weathers[index].humidity != undefined)?weathers[index].humidity:'N/A'} %</div>`+
+                    `<div id="humid" style="font-size:14px">Humidity : ${ (weathers[index].humidity != undefined)?weathers[index].humidity:'Not avaliable'} %</div>`+
                     `<div id="press" style="font-size:14px">Pressure : ${(weathers[index].pressure != undefined)?weathers[index].pressure:'N/A'} mbar</div></div>`+
                     `<div style="position: left;"><div id="pm1" style="font-size:14px">PM 1.0 ${ (weathers[index].pm1 != undefined)?weathers[index].pm1:'N/A'} ug/m3</div>`+
                     `<div id="pm25" style="font-size:14px">PM 2.5 ${(weathers[index].pm2_5 != undefined)?weathers[index].pm2_5:'N/A'} ug/m3</div>`+
@@ -486,8 +509,18 @@
         this.selected = this.allStation[index];
         this.weather = this.weathers[index];
         this.isHidden = true;
-        console.log(this.selected)
-        console.log("i =",index)
+        this.setSelectedHistory(this.selected.names)
+        showStationOnTheMap(this.selected.latitude,this.selected.longitude)
+        // console.log(this.selected)
+        // console.log("i =",index)
+      },
+
+      async setSelectedHistory(stationName) {
+        await this.getHistory(stationName);
+      },
+
+      closeInfoWindow(){
+        infoWindow.close();
       },
 
       calAverage() {
