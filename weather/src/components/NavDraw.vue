@@ -273,7 +273,7 @@
         right
         color="#0A275A"
         style="top: 60px;"
-        v-on:click="isHiddenHeatmap = true"
+        v-on:click="isHiddenHeatmap = true;"
       >
         <v-icon>mdi-monitor-dashboard</v-icon>
       </v-btn>
@@ -282,12 +282,8 @@
     <!---------- Heatmap sidebar ----------->
     <v-card
       absolute 
-<<<<<<< HEAD
-      v-if="isHeatmap"
+      v-if="isHiddenHeatmap"
       id="sidebar-bg"
-=======
-      v-if="isHeatmap && isHiddenHeatmap"
->>>>>>> f241ffa865ca71ad4d10b0552fcac94d7a02f9bf
       class="flex-column justify-end align-self-end text-center"
       style="
         overflow-x: hidden;

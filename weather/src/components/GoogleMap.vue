@@ -15,9 +15,7 @@
       v-bind:wx_type="wx_type"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
-<<<<<<< HEAD
-      <div  style="width: 20%; margin: 8px"
-      >
+      <div  style="width: 20%; margin: 60px">
       <v-btn 
         rounded
         fab
@@ -27,21 +25,6 @@
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-=======
-      <div  style="width: 20%; margin: 8px">
-        <row container gutter="{12}">
-        <v-btn 
-          rounded
-          fab
-          elevation="10"
-          v-if="!isSearch"
-          v-on:click="isSearch = true"
-          style="top:40px;"
-        >
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </row>
->>>>>>> f241ffa865ca71ad4d10b0552fcac94d7a02f9bf
 
       <!-- <v-toolbar
         class = "searching-tab rounded-xl"
@@ -51,8 +34,8 @@
         rounded
         dense
         style="top: 8px; left: 8px;"
-        
-      > -->
+        -->
+     
       <row flex container gutter="{12}">
         <column xs="{12}" md="{4}" lg="{3}">
           <v-autocomplete
@@ -61,7 +44,7 @@
             floating
             single-line
             rounded
-            style="width:200%; font-size:80%; top:35px;"
+            style="width:200%; font-size:80%; top:15px;"
             dense
             solo
             placeholder="Enter station"
@@ -73,9 +56,10 @@
             item-value="names"
             return-object
           
-<<<<<<< HEAD
           @change="showStationOnTheMap(selected.latitude,selected.longitude)"
         ></v-autocomplete>
+        </column>
+      </row>
       </div>  
 
       <v-btn-toggle
@@ -84,6 +68,7 @@
         mandatory
         v-model="toggleColorsText"
         color="deep-purple darken-4"
+        style="top:-50px; left:37%"
       >
         <v-btn
           text
@@ -100,40 +85,6 @@
         </v-btn>
       </v-btn-toggle>
 
-=======
-            @change="showStationOnTheMap(selected.latitude,selected.longitude)"
-          ></v-autocomplete>
-        </column>
-        
-        </row>   
-        </div>  
-
-
-        <row flex style="">
-          <div
-            id="toggleMap"
-            style="left:40%"
-          >
-            <v-btn
-              id="geo-btn"
-              v-on:click="isHeatmap=false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
-              style="font-size:80%; ;"
-            >
-              Geolocation
-            </v-btn>
-
-            <v-btn
-              id="heatmap-btn"
-              v-on:click="isHeatmap=true; calAverage(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
-              style="font-size:80%;"
-            >
-              Heatmap
-            </v-btn>
-          </div>
-        </row>
-
-  <row flex container gutter="{12}">
->>>>>>> f241ffa865ca71ad4d10b0552fcac94d7a02f9bf
       <v-col
         cols="12"
         class="py-2"
@@ -194,7 +145,7 @@
         </v-btn-toggle>
       
       </v-col>
-  </row>
+      
       <!-- </v-toolbar> -->
       
     </section>
