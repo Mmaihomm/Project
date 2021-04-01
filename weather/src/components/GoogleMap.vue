@@ -36,8 +36,7 @@
         style="top: 8px; left: 8px;"
         -->
      
-      <row flex container gutter="{12}">
-        <column xs="{12}" md="{4}" lg="{3}">
+      
           <v-autocomplete
             v-if="isSearch"
             hide-details
@@ -58,8 +57,6 @@
           
           @change="showStationOnTheMap(selected.latitude,selected.longitude)"
         ></v-autocomplete>
-        </column>
-      </row>
       </div>  
 
       <v-btn-toggle
@@ -99,7 +96,6 @@
           color="deep-purple accent-3"
           group
         >
-          <column xs="{12}" md="{4}" lg="{3}">
           <v-btn
             class="transparent"
             value= 0
@@ -141,7 +137,6 @@
             v-on:click="wx_type = 5; average = ave.pm10; deleteHeatmap(); showHeatmap()">
             PM 10
           </v-btn>
-          </column>
         </v-btn-toggle>
       
       </v-col>
@@ -163,14 +158,14 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWSbC4CgahJB93uFsTvH29kPuP0B3VR0A&libraries=places,visualization" async=""></script>
 
 <script>
-  import Vue from 'vue';
-  import { Row, Column } from 'vue-grid-responsive';
+  // import Vue from 'vue';
+  // import { Row, Column } from 'vue-grid-responsive';
   import axios from 'axios'
   import {apiService} from "../service"
   import Drawer from "../components/NavDraw";
 
-  Vue.component('row', Row);
-  Vue.component('column', Column);
+  // Vue.component('row', Row);
+  // Vue.component('column', Column);
 
   let map, heatmap;
   var infoWindow;
@@ -247,7 +242,6 @@
         // this.testInterval();
         this.showStationInSearch()
         this.calAverage()
-        // this.getHistory(HS2AR-10)
       });
       // this.getWeather(this.allStation);
       
@@ -384,15 +378,39 @@
           await this.getWeather(this.allStation[i].name);
           await this.getHistory(this.allStation[i].name);
           // await this.getPM(this.allStation[i].name, i) 
+          
           this.setProvinceFrom(this.allStation[i].lat, this.allStation[i].lng, i);               
         }
       },
 
       showStationInSearch() {
-        console.log(this.allStation)
+        // console.log(this.allStation)
         this.station = this.allStation.map((element)=>{
           return {names:element.name + ' (' + element.locat + ')',latitude:element.lat,longitude:element.lng,};
         })
+      },
+
+      // Get distance from latitude and longitude
+      getDistanceFromLatLng(lat1, lat2, lng1, lng2) {
+        if( lat1 == lat2 && lng1 == lng2) {
+          return 0;
+        }
+        else {
+          var R = 6371;
+          var dLat = this.deg2rad(lat2-lat1);
+          var dLng = this.deg2rad(lng2-lng1);
+          var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                  (Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+                  Math.sin(dLng/2) * Math.sin(dLng/2));
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          var d = R * c;
+          console.log("Distance =",d)
+          return d;
+        }
+      },
+
+      deg2rad(deg) {
+        return deg * (Math.PI/180)
       },
       
       // Get current position and set center
@@ -424,6 +442,23 @@
       setUserLocation(lat, long) {
         this.userLocat.latitude = lat
         this.userLocat.longitude = long
+
+        var min = 100000, tmp = 0;
+
+        // console.log(this.allStation)
+
+        // console.log(this.userLocat.latitude, this.userLocat.longitude)
+
+        for(let i=0; i<this.allStation.length; i++) {
+          // console.log(this.allStation[i].lat, this.allStation[i].lng)
+          tmp = this.getDistanceFromLatLng(this.userLocat.latitude, this.allStation[i].lat, this.userLocat.longitude, this.allStation[i].lng);
+          console.log(tmp)
+          if(tmp < min) {
+            min = tmp
+            this.selected = this.allStation[i];
+            this.weather = this.weathers[i];
+          }
+        }
         // console.log(this.userLocat.latitude,this.userLocat.longitude)
         // this.setProvinceFrom(lat, long);
       },
@@ -561,7 +596,7 @@
 
             // north
             if(this.allStation[i].region == 'north') {
-              console.log("North!")
+              // console.log("North!")
               n_l++;
               temp_n += this.weathers[i].temp;
               humid_n += this.weathers[i].humidity;
@@ -572,7 +607,7 @@
             }
 
             if(this.allStation[i].region == 'northeast') {
-              console.log("Northeast!")
+              // console.log("Northeast!")
               ne_l++;
               temp_ne += this.weathers[i].temp;
               humid_ne += this.weathers[i].humidity;
@@ -583,7 +618,7 @@
             }
 
             if(this.allStation[i].region == 'east') {
-              console.log("East!")
+              // console.log("East!")
               e_l++;
               temp_e += this.weathers[i].temp;
               humid_e += this.weathers[i].humidity;
@@ -594,7 +629,7 @@
             }
 
             if(this.allStation[i].region == 'central') {
-              console.log("Central!")
+              // console.log("Central!")
               c_l++;
               temp_c += this.weathers[i].temp;
               humid_c += this.weathers[i].humidity;
@@ -605,7 +640,7 @@
             }
 
             if(this.allStation[i].region == 'west') {
-              console.log("West!")
+              // console.log("West!")
               w_l++;
               temp_w += this.weathers[i].temp;
               humid_w += this.weathers[i].humidity;
@@ -616,7 +651,7 @@
             }
 
             if(this.allStation[i].region == 'south') {
-              console.log("South!")
+              // console.log("South!")
               s_l++;
               temp_s += this.weathers[i].temp;
               humid_s += this.weathers[i].humidity;
@@ -630,7 +665,7 @@
             undef_data++;
           }
         }
-        console.log(temp_sum, (length-undef_data))
+        // console.log(temp_sum, (length-undef_data))
         this.ave.temp.all = (temp_sum/ (length-undef_data)).toFixed(2);
         this.ave.temp.n = (temp_n / n_l).toFixed(2)
         this.ave.temp.ne = (temp_ne / ne_l).toFixed(2)
@@ -679,7 +714,7 @@
         this.ave.pm10.w = (pm10_w / w_l).toFixed(2)
         this.ave.pm10.s = (pm10_s / s_l).toFixed(2)
 
-        console.log(this.ave)
+        // console.log(this.ave)
       },
 
       showHeatmap() {
@@ -806,7 +841,7 @@
         if( this.wx_type == 0) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].temp)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].temp)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].temp != undefined)?this.weathers[i].temp:0})
             } 
           }
@@ -815,7 +850,7 @@
         if( this.wx_type == 1) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].humidity)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].humidity)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].humidity != undefined)?this.weathers[i].humidity:0})
             } 
           }
@@ -824,7 +859,7 @@
         if( this.wx_type == 2) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pressure)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pressure)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pressure != undefined)?this.weathers[i].pressure:0})
             } 
           }
@@ -833,7 +868,7 @@
         if( this.wx_type == 3) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm1)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm1)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm1 != undefined)?this.weathers[i].pm1:0})
             } 
           }
@@ -842,7 +877,7 @@
         if( this.wx_type == 4) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm2_5)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm2_5)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm2_5 != undefined)?this.weathers[i].pm2_5:0})
             } 
           }
@@ -851,14 +886,12 @@
         if( this.wx_type == 5) {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
-              console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm10)
+              // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm10)
               this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pm10 != undefined)?this.weathers[i].pm10:0})
             } 
           }
         }
         
-        
-        console.log(this.point)
         // console.log(this.point)
         // var heatMapData = [
         //   {location: new google.maps.LatLng(15.6454, 100.2218), weight: 0.5},
