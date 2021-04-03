@@ -208,6 +208,7 @@
         weathers: [],
         allStation: [],
         historyRDT: [],
+        forecartRDT: [],
         historyDT: {all:{}, name: '', temp_min: [], temp_max: [], days: ['Today']},
         point: [],
         ave: {
@@ -263,9 +264,11 @@
         this.weathers.push(temp);
       },
 
-      async getHistory(stationName){
+      async getHistoryForecast(stationName){
         var tmp = await apiService.historyData(stationName);
         this.historyRDT.push(tmp)
+        tmp = await apiService.forecastData(stationName);
+        this.forecartRDT.push(tmp)
       },
 
       async getPM(stationName, id){
@@ -376,11 +379,14 @@
         // Add province to each station 
         for(let i = 0; i < this.allStation.length; i++) {
           await this.getWeather(this.allStation[i].name);
-          await this.getHistory(this.allStation[i].name);
+          // await this.getHistory(this.allStation[i].name);
+          await this.getHistoryForecast(this.allStation[i].name);
           // await this.getPM(this.allStation[i].name, i) 
           
           this.setProvinceFrom(this.allStation[i].lat, this.allStation[i].lng, i);               
         }
+        console.log(this.historyRDT)
+        console.log(this.forecartRDT)
       },
 
       showStationInSearch() {
@@ -404,7 +410,7 @@
                   Math.sin(dLng/2) * Math.sin(dLng/2));
           var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
           var d = R * c;
-          console.log("Distance =",d)
+          // console.log("Distance =",d)
           return d;
         }
       },
@@ -452,7 +458,7 @@
         for(let i=0; i<this.allStation.length; i++) {
           // console.log(this.allStation[i].lat, this.allStation[i].lng)
           tmp = this.getDistanceFromLatLng(this.userLocat.latitude, this.allStation[i].lat, this.userLocat.longitude, this.allStation[i].lng);
-          console.log(tmp)
+          // console.log(tmp)
           if(tmp < min) {
             min = tmp
             this.selected = this.allStation[i];
@@ -536,8 +542,8 @@
                     `<div id="stationName" style="font-weight:bold; font-size:16px;">${weathers[index].name}</div><br>`+
                     `<div style="position: left;"><div id="temp" style="font-size:14px">Temperature : ${weathers[index]?.temp}  ํC</div>`+
                     `<div id="humid" style="font-size:14px">Humidity : ${ (weathers[index].humidity != undefined)?weathers[index].humidity:'Not avaliable'} %</div>`+
-                    `<div id="press" style="font-size:14px">Pressure : ${(weathers[index].pressure != undefined)?weathers[index].pressure:'N/A'} mbar</div></div>`+
-                    `<div style="position: left;"><div id="pm1" style="font-size:14px">PM 1.0 ${ (weathers[index].pm1 != undefined)?weathers[index].pm1:'N/A'} ug/m3</div>`+
+                    `<div id="press" style="font-size:14px">Pressure : ${(weathers[index].pressure != undefined)?weathers[index].pressure:'Not avaliable'} mbar</div></div>`+
+                    `<div style="position: left;"><div id="pm1" style="font-size:14px">PM 1.0 ${ (weathers[index].pm1 != undefined)?weathers[index].pm1:'Not avaliable'} ug/m3</div>`+
                     `<div id="pm25" style="font-size:14px">PM 2.5 ${(weathers[index].pm2_5 != undefined)?weathers[index].pm2_5:'N/A'} ug/m3</div>`+
                     `<div id="pm10" style="font-size:14px">PM 10 ${(weathers[index].pm10 != undefined)?weathers[index].pm10:'N/A'} ug/m3</div></div>`
                     );
@@ -561,14 +567,9 @@
         this.selected = this.allStation[index];
         this.weather = this.weathers[index];
         this.isHidden = true;
-        this.setSelectedHistory(this.selected.names)
-        showStationOnTheMap(this.selected.latitude,this.selected.longitude)
+        // this.showStationOnTheMap(this.selected.latitude,this.selected.longitude)
         // console.log(this.selected)
         // console.log("i =",index)
-      },
-
-      async setSelectedHistory(stationName) {
-        await this.getHistory(stationName);
       },
 
       closeInfoWindow(){
@@ -860,7 +861,7 @@
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pressure)
-              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pressure != undefined)?this.weathers[i].pressure:0})
+              this.point.push({location: new google.maps.LatLng(this.allStation[i].lat, this.allStation[i].lng), weight: (this.weathers[i].pressure != undefined)?(this.weathers[i].pressure)*(100/2300):0})
             } 
           }
         }
