@@ -145,7 +145,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200, 0, 0)', 'rgb(230, 179, 179)']" v-bind:dataHigh="[3,4,6,8,0]" v-bind:dataLow="[1,1,1,2,1]"/>
+                    <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200, 0, 0)', 'rgb(230, 179, 179)']" 
+                              v-bind:dataHigh="historyDT.temp_max" v-bind:dataLow="historyDT.temp_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -158,7 +159,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'Pressure'" v-bind:lineColor="['rgb(0, 150, 0)', 'rgb(182, 230, 179)']" v-bind:dataHigh="[1009,1009,1010,1008,1007]" v-bind:dataLow="[1009,1009,1010,1008,1007]"/>
+                    <lineChart v-bind:ytext="'Pressure'" v-bind:lineColor="['rgb(0, 150, 0)', 'rgb(182, 230, 179)']" 
+                              v-bind:dataHigh="historyDT.pressure_max" v-bind:dataLow="historyDT.pressure_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -171,7 +173,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'Humidity'" v-bind:lineColor="['rgb(0, 0, 150)', 'rgb(179, 188, 230)']" v-bind:dataHigh="[65,63,64,67,70]" v-bind:dataLow="[63,62,64,59,58]" />
+                    <lineChart v-bind:ytext="'Humidity'" v-bind:lineColor="['rgb(0, 0, 150)', 'rgb(179, 188, 230)']" 
+                              v-bind:dataHigh="historyDT.humidity_max" v-bind:dataLow="historyDT.humidity_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -184,7 +187,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'PM 2.5'" v-bind:lineColor="['rgb(227, 197, 0)', 'rgb(230, 227, 179)']" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                    <lineChart v-bind:ytext="'PM 10'" v-bind:lineColor="['rgb(227, 197, 0)', 'rgb(230, 227, 179)']" 
+                              v-bind:dataHigh="historyDT.pm10_max" v-bind:dataLow="historyDT.pm10_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -197,7 +201,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'PM 2.5'" v-bind:lineColor="['rgb(128, 66, 0)', 'rgb(209, 190, 165)']" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                    <lineChart v-bind:ytext="'PM 2.5'" v-bind:lineColor="['rgb(128, 66, 0)', 'rgb(209, 190, 165)']" 
+                              v-bind:dataHigh="historyDT.pm2_5_max" v-bind:dataLow="historyDT.pm2_5_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -210,7 +215,8 @@
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
-                    <lineChart v-bind:ytext="'PM 1.0'" v-bind:lineColor="['rgb(90, 0, 90)', 'rgb(226, 197, 237)']" v-bind:dataHigh="[5,6,7,8,9,12]" v-bind:dataLow="[3,4,8,6,2]" />
+                    <lineChart v-bind:ytext="'PM 1.0'" v-bind:lineColor="['rgb(90, 0, 90)', 'rgb(226, 197, 237)']" 
+                              v-bind:dataHigh="historyDT.pm1_max" v-bind:dataLow="historyDT.pm1_min" v-bind:days="historyDT.days"/>
                 </v-card>
               </v-card>
             </v-tab-item>
@@ -239,7 +245,8 @@
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
                 <v-col>
-                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" v-bind:dataHigh="[23,24,26,28,30]" v-bind:dataLow="[15,16,18,20,17]"/>
+                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" 
+                            v-bind:dataHigh="historyDT.temp_max" v-bind:dataLow="historyDT.temp_min" v-bind:days="historyDT.days"/>
                 </v-col>
               </v-card>
             </v-tab-item>
@@ -247,7 +254,7 @@
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
                 <v-col>
-                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" v-bind:dataHigh="[1,0,3,5,4]" v-bind:dataLow="[19,18,20,20,15]"/>
+                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" v-bind:dataHigh="[1,0,3,5,4]" v-bind:dataLow="[]"/>
                 </v-col>
               </v-card>
             </v-tab-item>
@@ -497,7 +504,7 @@ import {apiService} from "../service"
 import radChart from "../components/radiusChart"
 import lineChart from "../components/lineChart"
 
-
+// console.log(this.station);
 export default {
   name: "Drawer",
   
@@ -546,6 +553,7 @@ export default {
     },
 
     changeBg(type) {
+      console.log(this.historyDT.days)
       var color = "";
       console.log("Change color test")
       if(type == 0) {
@@ -574,21 +582,13 @@ export default {
       }
     },
 
-    calculateData() {
-      this.temp
-      var tmp = (this.weather.pressure * 100) / 2026;
-      this.press[0] = tmp;
-      console.log(this.press)
-      this.humid
-      this.pm1
-      this.pm25
-      this.pm10    
-    },
+
   },
 
   props:{
     station: String,
     weather: Object,
+    historyDT: Object,
     weathers: Array,
     isHidden: Boolean,
     isHeatmap: Boolean,

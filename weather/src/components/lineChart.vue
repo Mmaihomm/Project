@@ -19,6 +19,7 @@ export default {
         Min:Number,
         Max:Number,
         lineColor:Array,
+        days:Array,
     },
     data() {
         return{
@@ -72,9 +73,12 @@ export default {
                         size: 1
                     },
                     xaxis: {
-                        categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Now'],
+                        labels: {
+                            format: "${0}",
+                        },
+                        categories: this.days,
                         title: {
-                            text: 'time'
+                            text: 'Days'
                         }
                     },
                     yaxis: {

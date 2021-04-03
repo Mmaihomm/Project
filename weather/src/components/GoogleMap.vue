@@ -9,6 +9,7 @@
     <Drawer 
       v-bind:station="selected.name" 
       v-bind:weather="weather" 
+      v-bind:historyDT="historyDT"
       v-bind:isHidden="isHidden" 
       v-bind:isHeatmap="isHeatmap"
       v-bind:average="average"
@@ -209,7 +210,21 @@
         allStation: [],
         historyRDT: [],
         forecartRDT: [],
-        historyDT: {all:{}, name: '', temp_min: [], temp_max: [], days: ['Today']},
+        temp_min: [], temp_max: [],
+        pressure_min: [], pressure_max: [],
+        humidity_min: [], humidity_max: [],
+        pm1_min: [], pm1_max: [],
+        pm2_5_min: [], pm2_5_max: [],
+        pm10_min: [], pm10_max: [],
+        days: [],
+        historyDT: {name: '', 
+                    temp_min: [], temp_max: [],
+                    pressure_min: [], pressure_max: [],
+                    humidity_min: [], humidity_max: [],
+                    pm1_min: [], pm1_max: [],
+                    pm2_5_min: [], pm2_5_max: [],
+                    pm10_min: [], pm10_max: [],
+                    days: []},
         point: [],
         ave: {
           temp: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
@@ -385,7 +400,7 @@
           
           this.setProvinceFrom(this.allStation[i].lat, this.allStation[i].lng, i);               
         }
-        console.log(this.historyRDT)
+        // console.log(this.historyRDT)
         console.log(this.forecartRDT)
       },
 
@@ -394,6 +409,96 @@
         this.station = this.allStation.map((element)=>{
           return {names:element.name + ' (' + element.locat + ')',latitude:element.lat,longitude:element.lng,};
         })
+      },
+
+      async setHistorynForecast(id) {
+        var date
+        this.resetHistory();
+        console.log(this.historyRDT[id])
+        this.historyDT.name = this.historyRDT[id].name;
+        for(let i = (this.historyRDT[id].length-1); i > (this.historyRDT[id].length-6); i--){
+          console.log(this.historyRDT[id][i])
+          date = this.splitDate(this.historyRDT[id][i].date_time)
+          console.log("Date =",date)
+          this.days.unshift(date)
+          if(this.historyRDT[id][i] == undefined) {
+            this.temp_min.unshift(null)
+            this.temp_max.unshift(null)
+
+            this.humidity_min.unshift(null)
+            this.humidity_max.unshift(null)
+
+            this.pressure_min.unshift(null)
+            this.pressure_max.unshift(null)
+
+            this.pm1_min.unshift(null)
+            this.pm1_max.unshift(null)
+
+            this.pm2_5_min.unshift(null)
+            this.pm2_5_max.unshift(null)
+
+            this.pm10_min.unshift(null)
+            this.pm10_max.unshift(null)
+          }
+          else {
+            this.temp_min.unshift(this.historyRDT[id][i].temp_min)
+            this.temp_max.unshift(this.historyRDT[id][i].temp_max)
+
+            this.humidity_min.unshift(this.historyRDT[id][i].humidity_min)
+            this.humidity_max.unshift(this.historyRDT[id][i].humidity_max)
+
+            this.pressure_min.unshift(this.historyRDT[id][i].pressure_min)
+            this.pressure_max.unshift(this.historyRDT[id][i].pressure_max)
+
+            this.pm1_min.unshift(this.historyRDT[id][i].pm1_min)
+            this.pm1_max.unshift(this.historyRDT[id][i].pm1_max)
+
+            this.pm2_5_min.unshift(this.historyRDT[id][i].pm2_5_min)
+            this.pm2_5_max.unshift(this.historyRDT[id][i].pm2_5_max)
+
+            this.pm10_min.unshift(this.historyRDT[id][i].pm10_min)
+            this.pm10_max.unshift(this.historyRDT[id][i].pm10_max)
+          }
+        }
+
+        this.historyDT.temp_min = await this.temp_min
+        this.historyDT.temp_max = await this.temp_max
+        this.historyDT.pressure_min = await this.pressure_min
+        this.historyDT.pressure_max = await this.pressure_max
+        this.historyDT.humidity_min = await this.humidity_min
+        this.historyDT.humidity_max = await this.humidity_max
+        this.historyDT.pm1_min = await this.pm1_min
+        this.historyDT.pm1_max = await this.pm1_max
+        this.historyDT.pm2_5_min = await this.pm2_5_min
+        this.historyDT.pm2_5_max = await this.pm2_5_max
+        this.historyDT.pm10_min = await this.pm10_min
+        this.historyDT.pm10_max = await this.pm10_max
+        this.historyDT.days = await this.days
+
+        console.log("History Data : ",this.historyDT)
+      },
+
+      splitDate(datetime) {
+        var date = datetime.split('T')
+        date = date[0].split('-')
+        date = date[1].concat('-',date[2])
+        return date
+      },
+
+      resetHistory() {
+        this.temp_min = []
+        this.temp_max = []
+        this.pressure_min = []
+        this.pressure_max = []
+        this.humidity_min = []
+        this.humidity_max = []
+        this.pm1_min = []
+        this.pm1_max = []
+        this.pm2_5_min = []
+        this.pm2_5_max = []
+        this.pm10_min = []
+        this.pm10_max = []
+        this.days = []
       },
 
       // Get distance from latitude and longitude
@@ -550,13 +655,16 @@
                   // infoWindow.setBackgroundColor("rgb(153, 255, 73)");
                   infoWindow.open(map, marker[i]);
                 })
-                google.maps.event.addListener(marker[i], "click", (event,weathers = this.weathers , index = i) => {
+                google.maps.event.addListener(marker[i], "click", async (event,weathers = this.weathers , index = i) => {
                   // this.selected = this.allStation[index];
                   // this.weather = weathers[index];
                   // console.log(this.isHidden)
                   // this.isHidden = true;
                   // console.log("i =",index)
+                  this.isHidden = false;
+                  await this.setHistorynForecast(index);
                   this.showPopup(index);
+                  
                 }); 
           }
    
