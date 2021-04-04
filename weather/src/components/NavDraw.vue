@@ -94,7 +94,7 @@
                 <v-row>
                   <v-col cols="6">
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.temp]" v-bind:value="30" v-bind:color="'rgb(200, 0, 0)'" />
+                      <radChart v-bind:serie="[weather.temp]" v-bind:value="30"  v-bind:color="'rgb(255, 0, 0)'" />
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Temperature ( ํC )
                       </v-card>
@@ -237,19 +237,19 @@
           style="overflow:auto; height:300px; background-color: rgba(256,256,256,0.1);"
           >
           <v-tabs v-model="history" dark background-color="transparent">
-            <v-tab>History</v-tab>
+            <!-- <v-tab>History</v-tab> -->
             <v-tab>Forecast</v-tab>
           </v-tabs>
 
           <v-tabs-items v-model="history" class="transparent">
-            <v-tab-item>
+            <!-- <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
                 <v-col>
                   <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" 
                             v-bind:dataHigh="historyDT.temp_max" v-bind:dataLow="historyDT.temp_min" v-bind:days="historyDT.days"/>
                 </v-col>
               </v-card>
-            </v-tab-item>
+            </v-tab-item> -->
             <!--Forecast card-->
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
@@ -316,7 +316,7 @@
           >
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
-        <v-card-title d-flex class="flex-column pa-2">Average </v-card-title>
+        <v-card-title d-flex class="flex-column pa-2 " style="color:white; font-size:150%" > {{averageType()}} ( {{unit()}} ) </v-card-title>
       </v-row>
 
       <v-row>
@@ -330,7 +330,7 @@
             font-size: 48px; 
             font-family: 'Century Gothic';"
         >
-          {{ average.all }}  
+          {{ average.all }} 
         </v-card>
       </v-row>
               
@@ -511,10 +511,7 @@ export default {
   
 
   mounted() {
-    //this.getWeatherStation()
-    //this.getWeather(1)
-    //this.getPM('HS9AN-10')
-    this.changeBg(this.wx_type);
+    
   },
 
   components:{
@@ -552,8 +549,29 @@ export default {
       return apiService.pmData(stationName)
     },
 
+    averageType(){
+      if(this.wx_type == 0)  this.averageName = 'Temperature Average';
+      if(this.wx_type == 1)  this.averageName = 'Humidity Average';
+      if(this.wx_type == 2)  this.averageName = 'Pressure Average';
+      if(this.wx_type == 3)  this.averageName = 'PM 10 Average';
+      if(this.wx_type == 4)  this.averageName = 'PM 2.5 Average';
+      if(this.wx_type == 5)  this.averageName = 'PM 1 Average';
+      return  this.averageName
+    },
+
+    unit(){
+      if(this.wx_type == 0)  this.unitName = 'ํ C';
+      if(this.wx_type == 1)  this.unitName = '%';
+      if(this.wx_type == 2)  this.unitName = 'mbar';
+      if(this.wx_type == 3)  this.unitName = 'ug/m3';
+      if(this.wx_type == 4)  this.unitName = 'ug/m3';
+      if(this.wx_type == 5)  this.unitName = 'ug/m3';
+      return this.unitName
+    },
+
     changeBg(type) {
       console.log(this.historyDT.days)
+      
       var color = "";
       console.log("Change color test")
       if(type == 0) {
@@ -572,16 +590,15 @@ export default {
         color = "rgba(204, 0, 0, 0.6)"
         document.getElementById('sidebar-bg').style.backgroundColor = color;
       }
-      else if(type == 4) {
+      else if(type === 4) {
         color = "rgba(204, 0, 0, 0.6)"
         document.getElementById('sidebar-bg').style.backgroundColor = color;
       }
-      else if(type == 5) {
+      else if(type === 5) {
         color = "rgba(204, 0, 0, 0.6)"
         document.getElementById('sidebar-bg').style.backgroundColor = color;
       }
     },
-
 
   },
 
@@ -595,6 +612,7 @@ export default {
     isHiddenHeatmap: Boolean,
     average: Object,
     wx_type: Number,
+    
   },
 
   data() {
@@ -608,7 +626,7 @@ export default {
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
       temp: [], press:[], humid:[], pm10:[], pm25:[], pm1:[],
       dewPoint: 25,
-      
+      averageName: '',
     };
   },
 };
