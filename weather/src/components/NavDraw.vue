@@ -323,7 +323,8 @@
             justify-items: center;
             justify-content: center;
             font-size: 48px; 
-            font-family: 'Century Gothic';"
+            font-family: 'Century Gothic';
+            color: white;"
         >
           {{ average.all }} 
         </v-card>
@@ -340,7 +341,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">North</v-card>
+                font-size: 14px;
+                color: white;" >North</v-card>
               <v-card
                 flat
                 style="
@@ -365,7 +367,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">North-east</v-card>
+                font-size: 14px;
+                color: white;">North-east</v-card>
               <v-card
                 flat
                 style="
@@ -393,7 +396,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">East</v-card>
+                font-size: 14px;
+                color: white;">East</v-card>
               <v-card
                 flat
                 style="
@@ -418,7 +422,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">Central</v-card>
+                font-size: 14px;
+                color: white;">Central</v-card>
               <v-card
                 flat
                 style="
@@ -446,7 +451,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">West</v-card>
+                font-size: 14px;
+                color: white;">West</v-card>
               <v-card
                 flat
                 style="
@@ -471,7 +477,8 @@
                 class="transparent text-left font-weight-medium" 
                 style="
                 padding-left: 8px;
-                font-size: 14px;">South</v-card>
+                font-size: 14px;
+                color: white;">South</v-card>
               <v-card
                 flat
                 style="
@@ -616,6 +623,7 @@ export default {
           return 'rgb(255, 0, 0)'
         }
       }
+    },
 
     averageType(){
       if(this.wx_type == 0)  this.averageName = 'Temperature Average';

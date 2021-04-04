@@ -57,7 +57,7 @@ export default {
                         curve: 'smooth'
                     },
                     title: {
-                        text: 'Average High & Low Temperature',
+                        text: this.ytext,
                         align: 'left',
                         style: {
                                 fontSize:  '11px',
