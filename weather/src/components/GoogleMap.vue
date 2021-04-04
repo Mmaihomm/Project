@@ -14,7 +14,7 @@
       v-bind:isHidden="isHidden" 
       v-bind:isHeatmap="isHeatmap"
       v-bind:average="average"
-      v-bind:wx_type="wx_type"
+      v-bind:wx_type="wx"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
       <div  style="width: 20%; margin: 60px">
@@ -71,18 +71,30 @@
       >
         <v-btn
           text
-          v-on:click="isHeatmap=false; isHidden = false; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+          v-on:click="isHeatmap=false; isHidden = false; isHiddenSelect = flase; showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
           Geolocation
         </v-btn>
 
         <v-btn
           text
-          v-on:click="isHeatmap=true; isHidden = false; calAverage(); setStartHM(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
+          v-on:click="isHeatmap=true; isHidden = false; isHiddenSelect = true; calAverage(); setStartHM(); showStationOnTheMap(userLocat.latitude,userLocat.longitude)"
         >
-          Heatmap
+          Heatmap 
+          
         </v-btn>
+        <v-select
+              style="top: 3px; padding-left:2px;  width:130px;"
+              dense
+              v-if="isHiddenSelect" 
+              :items="heatmapType"
+              v-model="wx_type"
+              v-on:change="showSelect();"
+              >
+   
+        ></v-select>
       </v-btn-toggle>
+        
 
       <v-col
         cols="12"
@@ -92,54 +104,7 @@
         
       >
       
-        <v-btn-toggle
-          v-model="wx_type"
-          mandatory
-          color="deep-purple accent-3"
-          group
-        >
-          <v-btn
-            class="transparent"
-            value= 0
-            v-on:click="wx_type = 0; average = ave.temp; deleteHeatmap(); showHeatmap()">
-            Temperature
-          </v-btn>
-
-          <v-btn 
-            class="transparent"
-            value= 1
-            v-on:click="wx_type = 1;average = ave.humid; deleteHeatmap(); showHeatmap()">
-            Humidity
-          </v-btn>
-
-          <v-btn 
-            class="transparent"
-            value= 2
-            v-on:click="wx_type = 2; average = ave.press; deleteHeatmap(); showHeatmap()">
-            Pressure
-          </v-btn>
-
-          <v-btn 
-            class="transparent"
-            value= 3
-            v-on:click="wx_type = 3; average = ave.pm1; deleteHeatmap(); showHeatmap()">
-            PM 1.0
-          </v-btn>
-
-          <v-btn 
-            class="transparent"
-            value= 4
-            v-on:click="wx_type = 4; average = ave.pm2_5; deleteHeatmap(); showHeatmap()">
-            PM 2.5
-          </v-btn>
-
-          <v-btn 
-            class="transparent"
-            value= 5
-            v-on:click="wx_type = 5; average = ave.pm10; deleteHeatmap(); showHeatmap()">
-            PM 10
-          </v-btn>
-        </v-btn-toggle>
+        
       
       </v-col>
       
@@ -198,6 +163,8 @@
     },
     data() {
       return {
+        wx: 0,
+        heatmapType: ['Temperature','Humidity','Pressure','PM10','PM2.5','PM1'],
         isSearch: false,
         isHidden: false,
         isHeatmap: false,
@@ -240,11 +207,13 @@
           pm10: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
         },
         average: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
-        wx_type: 0,
+        wx_type: 'Temperature',
         toggleColorsText: 0,
 
       };
     },
+
+
 
     beforeCreate(){
       
@@ -295,6 +264,17 @@
         this.pm.push(temp)
       },
 
+      showSelect(){
+        this.getPoints(); 
+        if(this.wx_type === 'Temperature') {this.average = this.ave.temp; this.wx = 0;}
+        else if(this.wx_type === 'Humidity') {this.average = this.ave.humid; this.wx = 1;}
+        else if(this.wx_type === 'Pressure') {this.average = this.ave.press; this.wx = 2;}
+        else if(this.wx_type === 'PM10') {this.average = this.ave.pm10; this.wx = 3;}
+        else if(this.wx_type === 'PM2.5') {this.average = this.ave.pm2_5; this.wx = 4;}
+        else if(this.wx_type === 'PM1') {this.average = this.ave.pm1; this.wx = 5;}
+        this.deleteHeatmap(); 
+        this.showHeatmap()
+      },
       // async getDataWeather() {
       //   this.allStation = await this.getWeatherStation();
       // },
@@ -854,6 +834,7 @@
         const gradient = [
           [
             // Temp
+            "rgba(255, 255, 155, 0.3)",
             "rgba(255, 255, 155, 1)",
             "rgba(255, 255, 0, 1)",
             "rgba(255, 225, 0, 1)",
@@ -869,6 +850,7 @@
           ],
           // Humid
           [
+            "rgba(155, 255, 255, 0.3)",
             "rgba(155, 255, 255, 1)",
             "rgba(0, 225, 255, 1)",
             "rgba(0, 200, 255, 1)",
@@ -884,6 +866,7 @@
           ],
           // Press
           [
+            "rgba(155, 255, 180, 0.3)",
             "rgba(155, 255, 180, 1)",
             "rgba(0, 255, 180, 1)",
             "rgba(0, 255, 160, 1)",
@@ -900,6 +883,7 @@
           ],
           // PM 1.0
           [
+            "rgba(255, 155, 255, 0.3)",
             "rgba(255, 155, 255, 1)",
             "rgba(255, 100, 255, 1)",
             "rgba(255, 80, 255, 1)",
@@ -916,6 +900,7 @@
           ],
           // PM 2.5
           [
+            "rgba(255, 193, 128, 0.3)",
             "rgba(255, 193, 128, 1)",
             "rgba(255, 181, 102, 1)",
             "rgba(255, 169, 77, 1)",
@@ -932,6 +917,7 @@
           ],
           // PM 10 
           [
+            "rgba(255, 245, 204, 0.3)",
             "rgba(255, 245, 204, 1)",
             "rgba(255, 240, 179, 1)",
             "rgba(255, 235, 153, 1)",
@@ -957,7 +943,7 @@
           map: map
         });
         heatmap.set("radius", 50);
-        heatmap.set("gradient", gradient[this.wx_type])
+        heatmap.set("gradient", gradient[this.wx])
       },
 
       deleteHeatmap() {
@@ -969,7 +955,7 @@
         console.log("Getting data point for heatmap")
         this.point = [];
         // temp
-        if( this.wx_type == 0) {
+        if( this.wx_type == 'Temperature') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].temp)
@@ -978,7 +964,7 @@
           }
         }
         // humid
-        if( this.wx_type == 1) {
+        if( this.wx_type == 'Humidity') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].humidity)
@@ -987,7 +973,7 @@
           }
         }
         // press
-        if( this.wx_type == 2) {
+        if( this.wx_type == 'Pressure') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pressure)
@@ -996,7 +982,7 @@
           }
         }
         // pm 1.0
-        if( this.wx_type == 3) {
+        if( this.wx_type == 'PM10') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm1)
@@ -1005,7 +991,7 @@
           }
         }
         // pm 2.5
-        if( this.wx_type == 4) {
+        if( this.wx_type == 'PM25') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm2_5)
@@ -1014,7 +1000,7 @@
           }
         }
         // pm 10
-        if( this.wx_type == 5) {
+        if( this.wx_type == 'PM1') {
           for(let i = 0; i < this.allStation.length; i++) {
             if (this.weathers[i] != undefined) {
               // console.log(this.allStation[i].lat, this.allStation[i].lng, this.weathers[i].pm10)
