@@ -94,19 +94,19 @@
                 <v-row>
                   <v-col cols="6">
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.temp]" v-bind:value="30" v-bind:color="'rgb(200, 0, 0)'" />
+                      <radChart v-bind:serie="[weather.temp]" v-bind:value="[weather.temp]" v-bind:color="setChartColor('temp', weather.temp)" />
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Temperature ( ํC )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.pressure]" v-bind:value="30" v-bind:color="'rgb(0, 150, 0)'"/>
+                      <radChart v-bind:serie="[pressPercent(weather.pressure)]" v-bind:value="[weather.pressure]" v-bind:color="setChartColor('pressure', weather.pressure)"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Pressure ( mbar )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.pm10]" v-bind:value="30" v-bind:color="'rgb(227, 197, 0)'"/>
+                      <radChart v-bind:serie="[pmPercent(weather.pm10)]" v-bind:value="[weather.pm10]" v-bind:color="setChartColor('pm', weather.pm10)"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 10 ( ug/m3 )
                       </v-card>
@@ -114,19 +114,19 @@
                   </v-col>
                   <v-col cols="6">  
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.humidity]" v-bind:value="30" v-bind:color="'rgb(0, 0, 150)'"/>
+                      <radChart v-bind:serie="[weather.humidity]" v-bind:value="[weather.humidity]" v-bind:color="setChartColor('humidity', weather.humidity)"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         Humidity (%)
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.pm2_5]" v-bind:value="30" v-bind:color="'rgb(128, 66, 0)'"/>
+                      <radChart v-bind:serie="[pmPercent(weather.pm2_5)]" v-bind:value="[weather.pm2_5]" v-bind:color="setChartColor('pm', weather.pm2_5)"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 2.5 ( ug/m3 )
                       </v-card>
                     </v-card>
                     <v-card flat class="justify-center" style="padding:35px 0 0 10px; overflow-x:hidden; height:109px; background-color: rgba(256,256,256,0);">
-                      <radChart v-bind:serie="[weather.pm1]" v-bind:value="30" v-bind:color="'rgb(90, 0, 90)'"/>
+                      <radChart v-bind:serie="[pmPercent(weather.pm1)]" v-bind:value="[weather.pm1]" v-bind:color="setChartColor('pm', weather.pm1)"/>
                       <v-card flat style="fontSize:12px; margin:-7px; background-color: rgba(256,256,256,0);">
                         PM 1.0 ( ug/m3 )
                       </v-card>
@@ -141,7 +141,7 @@
                 <v-card flat class="justify-center" style="overflow-x:hidden; height:110px; background-color: rgba(256,256,256,0);">
                   <v-col >
                     <div style="fontSize:35px; color:#F0B734; text-shadow: 3px 2px 1px #4A4A48;"> {{weather.temp}}  ํC</div>
-                    <div style="color:#FFFFFF;"> Dew point {{dewPoint}}  ํC</div>
+                    <!-- <div style="color:#FFFFFF;"> Dew point {{dewPoint}}  ํC</div> -->
                   </v-col>
                 </v-card>
                 <v-card flat style="background-color: rgba(256,256,256,0);">
@@ -237,24 +237,15 @@
           style="overflow:auto; height:300px; background-color: rgba(256,256,256,0.1);"
           >
           <v-tabs v-model="history" dark background-color="transparent">
-            <v-tab>History</v-tab>
             <v-tab>Forecast</v-tab>
           </v-tabs>
 
           <v-tabs-items v-model="history" class="transparent">
-            <v-tab-item>
-              <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
-                <v-col>
-                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" 
-                            v-bind:dataHigh="historyDT.temp_max" v-bind:dataLow="historyDT.temp_min" v-bind:days="historyDT.days"/>
-                </v-col>
-              </v-card>
-            </v-tab-item>
             <!--Forecast card-->
             <v-tab-item>
               <v-card flat style="height:252px; background-color: rgba(256,256,256,0.1);">
                 <v-col>
-                  <lineChart v-bind:ytext="'Temperature'" v-bind:lineColor="['rgb(200,0,0)', 'rgb(230, 179, 179)']" v-bind:dataHigh="[1,0,3,5,4]" v-bind:dataLow="[]"/>
+                  <lineChart v-bind:ytext="'Temperature Forecast'" v-bind:lineColor="['rgb(200,0,0)']" v-bind:dataHigh="forecastDT.temp" v-bind:days="forecastDT.days"/>
                 </v-col>
               </v-card>
             </v-tab-item>
@@ -552,8 +543,82 @@ export default {
       return apiService.pmData(stationName)
     },
 
+    pressPercent(press) {
+      var value = press * (100/2300);
+      return value
+    },
+
+    pmPercent(pm) {
+      var value = pm * (100/300);
+      return value
+    },
+
+    setChartColor(type, value) {
+      // Temperature
+      if(type == 'temp') {
+        if(value <= 25) {
+          return 'rgb(0, 255, 0)'
+        }
+        else if( value <= 30) {
+          return 'rgb(255, 255, 0)'
+        }
+        else if(value <= 40) {
+          return 'rgb(255, 153, 0)'
+        }
+        else {
+          return 'rgb(255, 0, 0)'
+        }
+      }
+
+      // Pressure
+      if(type == 'pressure') {
+        if(value <= 1013) {
+          return 'rgb(0, 255, 0)'
+        }
+        else if( value <= 1200) {
+          return 'rgb(255, 255, 0)'
+        }
+        else if(value <= 1500) {
+          return 'rgb(255, 153, 0)'
+        }
+        else {
+          return 'rgb(255, 0, 0)'
+        }
+      }
+
+      // Humidity
+      if(type == 'humidity') {
+        if(value <= 30) {
+          return 'rgb(255, 0, 0)'
+        }
+        else if( value <= 60) {
+          return 'rgb(255, 153, 0)'
+        }
+        else {
+          return 'rgb(0, 255, 0)'
+        }
+      }
+
+      // PM 
+      if(type == 'pm') {
+        if(value <= 50) {
+          return 'rgb(0, 255, 0)'
+        }
+        else if( value <= 100) {
+          return 'rgb(255, 255, 0)'
+        }
+        else if(value <= 150) {
+          return 'rgb(255, 153, 0)'
+        }
+        else {
+          return 'rgb(255, 0, 0)'
+        }
+      }
+    },
+
     changeBg(type) {
       console.log(this.historyDT.days)
+      console.log(this.forecastDT.temp)
       var color = "";
       console.log("Change color test")
       if(type == 0) {
@@ -589,6 +654,7 @@ export default {
     station: String,
     weather: Object,
     historyDT: Object,
+    forecastDT: Object,
     weathers: Array,
     isHidden: Boolean,
     isHeatmap: Boolean,
@@ -604,7 +670,6 @@ export default {
       stations: [],
       tab: 0,
       history: 0,
-      value: 30,
       items: ['All', 'Temperature', 'Pressure', 'Humidity', 'PM 10', 'PM 2.5', 'PM 1.0' ],
       temp: [], press:[], humid:[], pm10:[], pm25:[], pm1:[],
       dewPoint: 25,

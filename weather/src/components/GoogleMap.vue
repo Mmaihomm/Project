@@ -10,6 +10,7 @@
       v-bind:station="selected.name" 
       v-bind:weather="weather" 
       v-bind:historyDT="historyDT"
+      v-bind:forecastDT="forecastDT"
       v-bind:isHidden="isHidden" 
       v-bind:isHeatmap="isHeatmap"
       v-bind:average="average"
@@ -210,6 +211,7 @@
         allStation: [],
         historyRDT: [],
         forecartRDT: [],
+        temp: [],
         temp_min: [], temp_max: [],
         pressure_min: [], pressure_max: [],
         humidity_min: [], humidity_max: [],
@@ -225,6 +227,8 @@
                     pm2_5_min: [], pm2_5_max: [],
                     pm10_min: [], pm10_max: [],
                     days: []},
+        forecastDT: {temp: [0, 0, 0, 0, 0],
+                     days: ['', '', '', '', '']},
         point: [],
         ave: {
           temp: {all: 0.0, n: 0.0, ne: 0.0, e: 0.0, c: 0.0, w: 0.0, s: 0.0,},
@@ -413,10 +417,11 @@
 
       async setHistorynForecast(id) {
         var date
+        var length = this.historyRDT[id].length;
         this.resetHistory();
         console.log(this.historyRDT[id])
         this.historyDT.name = this.historyRDT[id].name;
-        for(let i = (this.historyRDT[id].length-1); i > (this.historyRDT[id].length-6); i--){
+        for(let i = (length-1); i > (length-6); i--){
           console.log(this.historyRDT[id][i])
           date = this.splitDate(this.historyRDT[id][i].date_time)
           console.log("Date =",date)
@@ -475,7 +480,24 @@
         this.historyDT.pm10_max = await this.pm10_max
         this.historyDT.days = await this.days
 
+        this.forecastDT.temp[4] = await this.forecartRDT[id][0].temp_next_twoday.toFixed(1)
+        date = await this.splitDate(this.forecartRDT[id][0].date_next_twoday)
+        this.forecastDT.days[4] = await date
+        this.forecastDT.temp[3] = await this.forecartRDT[id][0].temp_next_day.toFixed(1)
+        date = await this.splitDate(this.forecartRDT[id][0].date_next_day)
+        this.forecastDT.days[3] = await date
+        this.forecastDT.temp[2] = await this.historyRDT[id][length-1].temp_avg.toFixed(1)
+        this.forecastDT.days[2] = await this.historyDT.days[4]
+        this.forecastDT.temp[1] = await this.historyRDT[id][length-2].temp_avg.toFixed(1)
+        this.forecastDT.days[1] = await this.historyDT.days[3]
+        this.forecastDT.temp[0] = await this.historyRDT[id][length-3].temp_avg.toFixed(1)
+        this.forecastDT.days[0] = await this.historyDT.days[2]
+        
+        // this.forecastDT.temp[0] = await 
+
+
         console.log("History Data : ",this.historyDT)
+        console.log("Forecast : ", this.forecastDT)
       },
 
       splitDate(datetime) {

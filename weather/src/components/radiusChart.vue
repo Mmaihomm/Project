@@ -14,7 +14,7 @@ export default {
     props:{
        serie:Array, 
        color:String,
-       value:Number,
+       value:Array,
     },
     data() {
       return {
@@ -45,13 +45,12 @@ export default {
                                         }
                                     },
                                     dataLabels: {
-                                        name: {
-                                            show: false
-                                            },
+                                        enabled: false,
                                         value: {
+                                            show: false,
                                             offsetY: -2,
                                             fontSize: '15px',
-                                            formatter: function (val = this.value) {
+                                            formatter: function (val) {
                                                 return val 
                                                 }
                                             }
@@ -75,7 +74,8 @@ export default {
                                     stops: [0, 50, 53, 91]
                                 },
                             },
-                            labels: ['Average'],
+                            labels: this.value,
+                            colors: ['#000']
                         },
         };
     },
