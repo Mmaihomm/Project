@@ -19,7 +19,7 @@
       v-bind:wx_type="wx"
       v-bind:weathers="weathers"/>
     <section style="position:relative;z-index:1;">
-      <div  style="width: 20%; margin: 60px">
+      <div  style="width: 20%; padding:20px;">
       <v-btn 
         rounded
         fab
@@ -69,7 +69,7 @@
         mandatory
         v-model="toggleColorsText"
         color="deep-purple darken-4"
-        style="top:-50px; left:37%"
+        style="top:20px; left:37%"
       >
         <v-btn
           text

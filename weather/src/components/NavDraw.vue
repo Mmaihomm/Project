@@ -11,7 +11,7 @@
         buttom
         right
         color="#0A275A"
-        style="top: 60px;"
+        style="top: 10px;"
         v-on:click="isHidden = true"
       >
         <v-icon>mdi-monitor-dashboard</v-icon>
