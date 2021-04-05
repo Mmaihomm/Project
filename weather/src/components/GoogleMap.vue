@@ -1,6 +1,8 @@
 <template 
   absolute
+  
 >
+  
   <v-card 
     absolute
     tile
@@ -95,6 +97,13 @@
         ></v-select>
       </v-btn-toggle>
         
+      <half-circle-spinner
+            :animation-duration="1500"
+            :size="100"
+            :color="'#EFEC8D'"
+            style="left:45%;"
+            v-if="!isAvail"
+        /> 
 
       <v-col
         cols="12"
@@ -105,7 +114,6 @@
       >
       
         
-      
       </v-col>
       
       <!-- </v-toolbar> -->
@@ -127,9 +135,10 @@
 <script>
   // import Vue from 'vue';
   // import { Row, Column } from 'vue-grid-responsive';
-  import axios from 'axios'
-  import {apiService} from "../service"
+  import axios from 'axios';
+  import {apiService} from "../service";
   import Drawer from "../components/NavDraw";
+  import { HalfCircleSpinner } from 'epic-spinners';
 
   // Vue.component('row', Row);
   // Vue.component('column', Column);
@@ -160,6 +169,7 @@
     name: "GoogleMap",
     components:{
       Drawer,
+      HalfCircleSpinner
     },
     data() {
       return {
@@ -167,6 +177,7 @@
         heatmapType: ['Temperature','Humidity','Pressure','PM10','PM2.5','PM1'],
         isSearch: false,
         isHidden: false,
+        isAvail: false,
         isHeatmap: false,
         hm_start: true,
         userLocat: {latitude: null, longitude: null},
@@ -231,6 +242,7 @@
         // this.testInterval();
         this.showStationInSearch()
         this.calAverage()
+        this.isAvail = true
       });
       // this.getWeather(this.allStation);
       
