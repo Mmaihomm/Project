@@ -17,7 +17,7 @@ async function stationList() {
   let nextPage = 0;
 
   do {
-      let { data: response }  = await axios.get('http://161.246.5.197:10001/weather/reportstation', { 
+      let { data: response }  = await axios.get('https://a490e09e0901.ngrok.io/weather/reportstation', { 
         params: { page: ++page },
         headers: {
           'Accept': 'application/json', 
@@ -37,7 +37,7 @@ async function stationList() {
 
 
 async function weatherData(stationnname) {
-  var result = await  axios.get('http://161.246.5.197:10001/weather/weatherdata/?search=' + stationnname ,{
+  var result = await  axios.get('https://a490e09e0901.ngrok.io/weather/weatherdata/?search=' + stationnname ,{
     headers:{
       'Accept': 'application/json', 
     },
@@ -46,7 +46,7 @@ async function weatherData(stationnname) {
 }
 
 async function pmData(stationname){
-  var result = await axios.get('http://161.246.5.197:10001/weather/pmdata/?search=' + stationname,{
+  var result = await axios.get('https://a490e09e0901.ngrok.io/weather/pmdata/?search=' + stationname,{
     headers:{
       'Accept': 'application/json', 
     },
@@ -62,7 +62,7 @@ async function pmData(stationname){
 }
 
 async function historyData(stationnname) {
-  var result = await  axios.get('http://161.246.5.197:10001/weather/weatherhistory/?search=' + stationnname ,{
+  var result = await  axios.get('https://a490e09e0901.ngrok.io/weather/weatherhistory/?search=' + stationnname ,{
     headers:{
       'Accept': 'application/json', 
     },
@@ -71,7 +71,7 @@ async function historyData(stationnname) {
 }
 
 async function forecastData(stationnname) {
-  var result = await  axios.get('http://161.246.5.197:10001/weather/forecast/?search=' + stationnname ,{
+  var result = await  axios.get('https://a490e09e0901.ngrok.io/weather/forecast/?search=' + stationnname ,{
     headers:{
       'Accept': 'application/json', 
     },
